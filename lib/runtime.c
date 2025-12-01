@@ -88,6 +88,9 @@ bare__run(void) {
     bare__timer = 0;
   }
 
+  err = bare_run(bare, UV_RUN_NOWAIT);
+  assert(err >= 0);
+
   int timeout = uv_backend_timeout(bare__loop);
 
   if (timeout == 0) {
@@ -95,9 +98,6 @@ bare__run(void) {
   } else if (timeout > 0) {
     bare__timer = g_timeout_add(timeout, bare__on_timeout, NULL);
   }
-
-  err = bare_run(bare, UV_RUN_NOWAIT);
-  assert(err >= 0);
 }
 
 static void
