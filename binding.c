@@ -24,6 +24,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("widgetVisible", bare_gtk_widget_visible)
 
   V("windowInit", bare_gtk_window_init)
+  V("windowChild", bare_gtk_window_child)
 #undef V
 
 #define V(name, n) \
