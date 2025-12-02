@@ -10,6 +10,22 @@ project(bare_gtk C)
 fetch_package("github:holepunchto/bare@1.24.5")
 fetch_package("github:holepunchto/libpath")
 
+pkg_check_modules(GTK REQUIRED IMPORTED_TARGET GLOBAL gtk4)
+
+add_bare_module(bare_gtk)
+
+target_sources(
+  ${bare_gtk}
+  PRIVATE
+    binding.c
+)
+
+target_link_libraries(
+  ${bare_gtk}
+  PUBLIC
+    PkgConfig::GTK
+)
+
 add_executable(bare_runtime)
 
 target_sources(
@@ -40,8 +56,6 @@ target_link_libraries(
     rlimit_static
     path_static
 )
-
-pkg_check_modules(GTK REQUIRED IMPORTED_TARGET GLOBAL gtk4)
 
 target_link_libraries(
   bare_runtime

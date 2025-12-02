@@ -25,6 +25,8 @@ static GIOChannel *bare__channel;
 static guint bare__poll;
 static guint bare__timer;
 
+GtkApplication *bare_gtk_app;
+
 static void
 bare__on_shutdown(uv_async_t *handle) {
   uv_close((uv_handle_t *) handle, NULL);
@@ -176,7 +178,7 @@ main(int argc, char *argv[]) {
   bare__argc = argc;
   bare__argv = argv;
 
-  GtkApplication *app = gtk_application_new(NULL, 0);
+  GtkApplication *app = bare_gtk_app = gtk_application_new(NULL, 0);
 
   g_signal_connect(app, "activate", G_CALLBACK(bare__on_activate), NULL);
 
