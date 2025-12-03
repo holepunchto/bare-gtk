@@ -5,6 +5,7 @@
 #include <path.h>
 #include <rlimit.h>
 #include <signal.h>
+#include <unistd.h>
 #include <uv.h>
 
 #include <gtk/gtk.h>
@@ -106,18 +107,6 @@ static void
 bare__on_activate(GtkApplication *app, gpointer data) {
   int err;
 
-  err = uv_barrier_init(&bare__platform_ready, 2);
-  assert(err == 0);
-
-  err = uv_thread_create(&bare__platform_thread, bare__on_platform_thread, NULL);
-  assert(err == 0);
-
-  uv_barrier_wait(&bare__platform_ready);
-
-  uv_barrier_destroy(&bare__platform_ready);
-
-  bare__loop = uv_default_loop();
-
   err = uv_async_init(bare__loop, &bare__shutdown, bare__on_shutdown);
   assert(err == 0);
 
@@ -136,18 +125,18 @@ bare__on_activate(GtkApplication *app, gpointer data) {
   err = path_dirname(bin, &dir, path_behavior_system);
   assert(err == 0);
 
-  char bundle[4096];
+  char entry[4096];
   len = 4096;
 
   err = path_join(
     (const char *[]) {bin, "..", "..", "share", &bin[dir], "app.bundle", NULL},
-    bundle,
+    entry,
     &len,
     path_behavior_system
   );
   assert(err == 0);
 
-  err = bare_load(bare, bundle, NULL, NULL);
+  err = bare_load(bare, entry, NULL, NULL);
   (void) err;
 
   bare__channel = g_io_channel_unix_new(bare__loop->backend_fd);
@@ -174,6 +163,61 @@ main(int argc, char *argv[]) {
   assert(err == 0);
 
   argv = uv_setup_args(argc, argv);
+
+  err = uv_barrier_init(&bare__platform_ready, 2);
+  assert(err == 0);
+
+  err = uv_thread_create(&bare__platform_thread, bare__on_platform_thread, NULL);
+  assert(err == 0);
+
+  uv_barrier_wait(&bare__platform_ready);
+
+  uv_barrier_destroy(&bare__platform_ready);
+
+  bare__loop = uv_default_loop();
+
+  size_t len;
+
+  char bin[4096];
+  len = sizeof(bin);
+
+  err = uv_exepath(bin, &len);
+  assert(err == 0);
+
+  size_t dir;
+  err = path_dirname(bin, &dir, path_behavior_system);
+  assert(err == 0);
+
+  char preflight[4096];
+  len = 4096;
+
+  err = path_join(
+    (const char *[]) {bin, "..", "..", "share", &bin[dir], "preflight.bundle", NULL},
+    preflight,
+    &len,
+    path_behavior_system
+  );
+  assert(err == 0);
+
+  uv_fs_t fs;
+  err = uv_fs_access(bare__loop, &fs, preflight, R_OK, NULL);
+
+  if (err == 0) {
+    err = bare_setup(bare__loop, bare__platform, NULL, argc, (const char **) argv, NULL, &bare);
+    assert(err == 0);
+
+    err = bare_load(bare, preflight, NULL, NULL);
+    (void) err;
+
+    err = bare_run(bare, UV_RUN_DEFAULT);
+    assert(err == 0);
+
+    int exit_code;
+    err = bare_teardown(bare, UV_RUN_DEFAULT, &exit_code);
+    assert(err == 0);
+
+    if (exit_code != 0) _exit(exit_code);
+  }
 
   bare__argc = argc;
   bare__argv = argv;
