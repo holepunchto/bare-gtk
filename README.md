@@ -1,6 +1,6 @@
 # bare-gtk
 
-GTK runtime for Bare.
+GTK bindings and runtime for Bare.
 
 ```
 npm i bare-gtk
