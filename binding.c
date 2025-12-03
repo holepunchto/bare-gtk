@@ -22,8 +22,10 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   }
 
   V("widgetVisible", bare_gtk_widget_visible)
+  V("widgetSizeRequest", bare_gtk_widget_size_request)
 
   V("windowInit", bare_gtk_window_init)
+  V("windowDefaultSize", bare_gtk_window_default_size)
   V("windowChild", bare_gtk_window_child)
 #undef V
 
