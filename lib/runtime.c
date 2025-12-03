@@ -15,9 +15,6 @@ static uv_async_t bare__platform_shutdown;
 static uv_thread_t bare__platform_thread;
 static js_platform_t *bare__platform;
 
-static int bare__argc;
-static char **bare__argv;
-
 static uv_loop_t *bare__loop;
 static uv_async_t bare__shutdown;
 static bare_t *bare;
@@ -106,12 +103,6 @@ bare__run(void) {
 static void
 bare__on_activate(GtkApplication *app, gpointer data) {
   int err;
-
-  err = uv_async_init(bare__loop, &bare__shutdown, bare__on_shutdown);
-  assert(err == 0);
-
-  err = bare_setup(bare__loop, bare__platform, NULL, bare__argc, (const char **) bare__argv, NULL, &bare);
-  assert(err == 0);
 
   size_t len;
 
@@ -219,8 +210,11 @@ main(int argc, char *argv[]) {
     if (exit_code != 0) _exit(exit_code);
   }
 
-  bare__argc = argc;
-  bare__argv = argv;
+  err = uv_async_init(bare__loop, &bare__shutdown, bare__on_shutdown);
+  assert(err == 0);
+
+  err = bare_setup(bare__loop, bare__platform, NULL, argc, (const char **) argv, NULL, &bare);
+  assert(err == 0);
 
   GtkApplication *app = bare_gtk_app = gtk_application_new(NULL, 0);
 
