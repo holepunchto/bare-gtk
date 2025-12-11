@@ -55,10 +55,6 @@ target_link_libraries(
     log_static
     rlimit_static
     path_static
-)
-
-target_link_libraries(
-  bare_runtime
   PRIVATE
     PkgConfig::GTK
 )
