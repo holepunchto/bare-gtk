@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <bare.h>
 #include <js.h>
-#include <log.h>
 #include <path.h>
 #include <rlimit.h>
 #include <signal.h>
@@ -147,9 +146,6 @@ main(int argc, char *argv[]) {
   signal(SIGPIPE, SIG_IGN);
 #endif
 
-  err = log_open("bare", 0);
-  assert(err == 0);
-
   err = rlimit_set(rlimit_open_files, rlimit_infer);
   assert(err == 0);
 
@@ -248,9 +244,6 @@ main(int argc, char *argv[]) {
   assert(err == 0);
 
   uv_thread_join(&bare__platform_thread);
-
-  err = log_close();
-  assert(err == 0);
 
   return exit_code;
 }

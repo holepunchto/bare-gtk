@@ -52,7 +52,6 @@ target_link_libraries(
   PUBLIC
     $<LINK_LIBRARY:WHOLE_ARCHIVE,bare_static>
   PRIVATE
-    log_static
     rlimit_static
     path_static
   PRIVATE
