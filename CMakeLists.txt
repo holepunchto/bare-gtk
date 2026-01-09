@@ -7,7 +7,7 @@ find_package(PkgConfig REQUIRED)
 
 project(bare_gtk C)
 
-fetch_package("github:holepunchto/bare@1.24.5")
+fetch_package("github:holepunchto/bare@1.25.0")
 fetch_package("github:holepunchto/libpath")
 
 pkg_check_modules(GTK REQUIRED IMPORTED_TARGET GLOBAL gtk4)
