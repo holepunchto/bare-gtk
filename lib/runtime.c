@@ -24,6 +24,8 @@ static guint bare__timer;
 
 GtkApplication *bare_gtk_app;
 
+extern char __bare_identifier[] __attribute__((weak));
+
 static void
 bare__on_shutdown(uv_async_t *handle) {
   uv_close((uv_handle_t *) handle, NULL);
@@ -100,7 +102,10 @@ bare__run(void) {
 }
 
 static void
-bare__on_activate(GtkApplication *app, gpointer data) {
+bare__on_activate(GtkApplication *app, gpointer data) {}
+
+static void
+bare__on_startup(GtkApplication *app, gpointer data) {
   int err;
 
   size_t len;
@@ -214,9 +219,11 @@ main(int argc, char *argv[]) {
   err = bare_setup(bare__loop, bare__platform, NULL, argc, (const char **) argv, NULL, &bare);
   assert(err == 0);
 
-  GtkApplication *app = bare_gtk_app = gtk_application_new(NULL, 0);
+  GtkApplication *app = bare_gtk_app = gtk_application_new(__bare_identifier, 0);
 
   g_signal_connect(app, "activate", G_CALLBACK(bare__on_activate), NULL);
+
+  g_signal_connect(app, "startup", G_CALLBACK(bare__on_startup), NULL);
 
   g_application_run(G_APPLICATION(app), argc, argv);
 
