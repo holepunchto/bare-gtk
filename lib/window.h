@@ -1,16 +1,27 @@
+#ifndef BARE_GTK_WINDOW_H
+#define BARE_GTK_WINDOW_H
+
 #include <assert.h>
-#include <bare.h>
 #include <js.h>
+#include <utf.h>
 
 #include <gtk/gtk.h>
 
-extern GtkApplication *bare_gtk_app;
+#include "bridging.h"
+
+extern GtkApplication *bare_gtk_app __attribute__((weak));
+
+enum {
+  bare_gtk_window_event_close_request = 1 << 0,
+};
 
 typedef struct {
   GtkWindow handle;
 
-  js_env_t *env;
-  js_ref_t *ctx;
+  bare_gtk_state_t *state;
+
+  uint32_t events;
+  gulong on_close_request;
 } BareWindow;
 
 typedef struct {
@@ -22,63 +33,84 @@ G_DEFINE_TYPE(BareWindow, bare_window, GTK_TYPE_WINDOW)
 static void
 bare_window_init(BareWindow *self) {}
 
+static void
+bare_window_class_init(BareWindowClass *class) {}
+
 BareWindow *
 bare_window_new(void) {
   return g_object_new(bare_window_get_type(), NULL);
 }
 
-static void
-bare_window_finalize(GObject *object) {
-  int err;
+static gboolean
+bare_gtk_window__on_close_request(GtkWindow *window, gpointer data) {
+  BareWindow *self = (BareWindow *) window;
 
-  BareWindow *self = (BareWindow *) object;
+  bare_gtk__emit(self->state, window, "close-request", 0, NULL);
 
-  js_env_t *env = self->env;
-
-  err = js_delete_reference(env, self->ctx);
-  assert(err == 0);
-
-  G_OBJECT_CLASS(bare_window_parent_class)->finalize(object);
-}
-
-static void
-bare_window_class_init(BareWindowClass *class) {
-  GObjectClass *object_class = G_OBJECT_CLASS(class);
-
-  object_class->finalize = bare_window_finalize;
-}
-
-static void
-bare_gtk_window__on_release(js_env_t *env, void *data, void *finalize_hint) {
-  g_object_unref(data);
+  return GDK_EVENT_PROPAGATE;
 }
 
 static js_value_t *
 bare_gtk_window_init(js_env_t *env, js_callback_info_t *info) {
   int err;
 
-  size_t argc = 1;
-  js_value_t *argv[1];
-
-  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, NULL, NULL, NULL, (void **) &state);
   assert(err == 0);
-
-  assert(argc == 1);
 
   BareWindow *window = bare_window_new();
 
-  gtk_application_add_window(bare_gtk_app, GTK_WINDOW(window));
+  window->state = state;
 
-  window->env = env;
+  if (&bare_gtk_app && bare_gtk_app) gtk_application_add_window(bare_gtk_app, GTK_WINDOW(window));
 
-  err = js_create_reference(env, argv[0], 1, &window->ctx);
+  js_value_t *result;
+  err = js_create_uint32(env, bare_gobject_tag(state->registry, window), &result);
   assert(err == 0);
 
-  js_value_t *handle;
-  err = js_create_external(env, window, bare_gtk_window__on_release, NULL, &handle);
+  return result;
+}
+
+static js_value_t *
+bare_gtk_window_title(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, &argc, argv, NULL, (void **) &state);
   assert(err == 0);
 
-  return handle;
+  assert(argc == 1 || argc == 2);
+
+  GtkWindow *window;
+  err = bare_gobject_read_tag(env, state->registry, argv[0], "window", (gpointer *) &window);
+  if (err < 0) return NULL;
+
+  js_value_t *result = NULL;
+
+  if (argc == 1) {
+    const char *title = gtk_window_get_title(window);
+
+    if (title) {
+      err = js_create_string_utf8(env, (const utf8_t *) title, (size_t) -1, &result);
+      assert(err == 0);
+    } else {
+      err = js_get_null(env, &result);
+      assert(err == 0);
+    }
+  } else {
+    char *title;
+    err = bare_gtk__read_string_or_null(env, argv[1], "title", &title);
+    if (err < 0) return NULL;
+
+    gtk_window_set_title(window, title);
+
+    g_free(title);
+  }
+
+  return result;
 }
 
 static js_value_t *
@@ -88,20 +120,21 @@ bare_gtk_window_default_size(js_env_t *env, js_callback_info_t *info) {
   size_t argc = 3;
   js_value_t *argv[3];
 
-  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, &argc, argv, NULL, (void **) &state);
   assert(err == 0);
 
   assert(argc == 1 || argc == 3);
 
-  BareWindow *window;
-  err = js_get_value_external(env, argv[0], (void **) &window);
-  assert(err == 0);
+  GtkWindow *window;
+  err = bare_gobject_read_tag(env, state->registry, argv[0], "window", (gpointer *) &window);
+  if (err < 0) return NULL;
 
   js_value_t *result = NULL;
 
   if (argc == 1) {
     int width, height;
-    gtk_window_get_default_size(GTK_WINDOW(window), &width, &height);
+    gtk_window_get_default_size(window, &width, &height);
 
     err = js_create_array_with_length(env, 2, &result);
     assert(err == 0);
@@ -115,18 +148,18 @@ bare_gtk_window_default_size(js_env_t *env, js_callback_info_t *info) {
     assert(err == 0); \
   }
     V(0, width)
-    V(1, width)
+    V(1, height)
 #undef V
   } else {
     int32_t width;
-    err = js_get_value_int32(env, argv[1], &width);
-    assert(err == 0);
+    err = bare_gtk__read_int32(env, argv[1], "width", &width);
+    if (err < 0) return NULL;
 
     int32_t height;
-    err = js_get_value_int32(env, argv[2], &height);
-    assert(err == 0);
+    err = bare_gtk__read_int32(env, argv[2], "height", &height);
+    if (err < 0) return NULL;
 
-    gtk_window_set_default_size(GTK_WINDOW(window), width, height);
+    gtk_window_set_default_size(window, width, height);
   }
 
   return result;
@@ -139,34 +172,82 @@ bare_gtk_window_child(js_env_t *env, js_callback_info_t *info) {
   size_t argc = 2;
   js_value_t *argv[2];
 
-  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, &argc, argv, NULL, (void **) &state);
+  assert(err == 0);
+
+  assert(argc == 1 || argc == 2);
+
+  GtkWindow *window;
+  err = bare_gobject_read_tag(env, state->registry, argv[0], "window", (gpointer *) &window);
+  if (err < 0) return NULL;
+
+  js_value_t *result = NULL;
+
+  if (argc == 1) {
+    result = bare_gtk__create_tag(env, state, gtk_window_get_child(window));
+  } else {
+    bool is;
+    err = js_is_null(env, argv[1], &is);
+    assert(err == 0);
+
+    GtkWidget *child = NULL;
+
+    if (!is) {
+      err = bare_gobject_read_tag(env, state->registry, argv[1], "child", (gpointer *) &child);
+      if (err < 0) return NULL;
+    }
+
+    gtk_window_set_child(window, child);
+  }
+
+  return result;
+}
+
+static js_value_t *
+bare_gtk_window_event_mask(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, &argc, argv, NULL, (void **) &state);
   assert(err == 0);
 
   assert(argc == 1 || argc == 2);
 
   BareWindow *window;
-  err = js_get_value_external(env, argv[0], (void **) &window);
-  assert(err == 0);
-
-  js_value_t *result = NULL;
+  err = bare_gobject_read_type(env, state->registry, argv[0], "window", bare_window_get_type(), (gpointer *) &window);
+  if (err < 0) return NULL;
 
   if (argc == 1) {
-    GtkWidget *handle = gtk_window_get_child(GTK_WINDOW(window));
-
-    if (handle) {
-      err = js_create_external(env, handle, NULL, NULL, &result);
-      assert(err == 0);
-    } else {
-      err = js_get_null(env, &result);
-      assert(err == 0);
-    }
-  } else {
-    void *handle;
-    err = js_get_value_external(env, argv[1], &handle);
+    js_value_t *result;
+    err = js_create_uint32(env, window->events, &result);
     assert(err == 0);
 
-    gtk_window_set_child(GTK_WINDOW(window), handle);
+    return result;
   }
 
-  return result;
+  uint32_t events;
+  err = bare_gtk__read_uint32(env, argv[1], "events", &events);
+  if (err < 0) return NULL;
+
+  uint32_t changed = window->events ^ events;
+
+  if (changed & bare_gtk_window_event_close_request) {
+    if (events & bare_gtk_window_event_close_request) {
+      window->on_close_request = g_signal_connect(window, "close-request", G_CALLBACK(bare_gtk_window__on_close_request), state);
+    } else {
+      g_signal_handler_disconnect(window, window->on_close_request);
+
+      window->on_close_request = 0;
+    }
+  }
+
+  window->events = events;
+
+  return NULL;
 }
+
+#endif // BARE_GTK_WINDOW_H

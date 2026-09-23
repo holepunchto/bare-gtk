@@ -4,6 +4,7 @@
 #include <path.h>
 #include <rlimit.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <uv.h>
 
@@ -21,6 +22,8 @@ static bare_t *bare;
 static GIOChannel *bare__channel;
 static guint bare__poll;
 static guint bare__timer;
+
+static bool bare__exited;
 
 GtkApplication *bare_gtk_app;
 
@@ -92,6 +95,8 @@ bare__run(void) {
   err = bare_run(bare, UV_RUN_NOWAIT);
   assert(err >= 0);
 
+  if (bare__exited) return;
+
   int timeout = uv_backend_timeout(bare__loop);
 
   if (timeout == 0) {
@@ -99,6 +104,13 @@ bare__run(void) {
   } else if (timeout > 0) {
     bare__timer = g_timeout_add(timeout, bare__on_timeout, NULL);
   }
+}
+
+static void
+bare__on_exit(bare_t *bare, void *data) {
+  bare__exited = true;
+
+  g_application_quit(G_APPLICATION(bare_gtk_app));
 }
 
 static void
@@ -219,6 +231,9 @@ main(int argc, char *argv[]) {
   err = bare_setup(bare__loop, bare__platform, NULL, argc, (const char **) argv, NULL, &bare);
   assert(err == 0);
 
+  err = bare_on_exit(bare, bare__on_exit, NULL);
+  assert(err == 0);
+
   GtkApplication *app = bare_gtk_app = gtk_application_new(__bare_identifier, 0);
 
   g_signal_connect(app, "activate", G_CALLBACK(bare__on_activate), NULL);
@@ -236,11 +251,13 @@ main(int argc, char *argv[]) {
   err = uv_async_send(&bare__shutdown);
   assert(err == 0);
 
-  err = bare_terminate(bare);
-  assert(err == 0);
+  if (!bare__exited) {
+    err = bare_terminate(bare);
+    assert(err == 0);
 
-  err = bare_run(bare, UV_RUN_DEFAULT);
-  assert(err == 0);
+    err = bare_run(bare, UV_RUN_DEFAULT);
+    assert(err == 0);
+  }
 
   int exit_code;
   err = bare_teardown(bare, UV_RUN_DEFAULT, &exit_code);
