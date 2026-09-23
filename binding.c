@@ -49,11 +49,11 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
 
   V("initCheck", bare_gtk_init_check)
 
-  V("claim", bare_gobject_registry_claim)
-  V("wrapper", bare_gobject_registry_wrapper)
+  V("claim", bare_gobject_claim)
+  V("wrapper", bare_gobject_wrapper)
   V("registrySize", bare_gobject_registry_size)
-  V("handle", bare_gobject_registry_handle)
-  V("adopt", bare_gobject_registry_adopt)
+  V("handle", bare_gobject_handle)
+  V("adopt", bare_gobject_adopt)
 
   V("widgetVisible", bare_gtk_widget_visible)
   V("widgetSizeRequest", bare_gtk_widget_size_request)

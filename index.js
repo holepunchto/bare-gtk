@@ -14,6 +14,4 @@ exports.StyleContext = require('./lib/style-context')
 
 exports.constants = require('./lib/constants')
 
-require('./lib/handle').expose(
-  Object.values(exports).filter((value) => typeof value === 'function')
-)
+require('./lib/handle').expose(Object.values(exports))
