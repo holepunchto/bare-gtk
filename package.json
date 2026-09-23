@@ -5,6 +5,7 @@
   "exports": {
     "./package": "./package.json",
     ".": "./index.js",
+    "./text": "./lib/text.js",
     "./runtime": "./runtime.js"
   },
   "files": [
