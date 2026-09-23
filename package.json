@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/holepunchto/bare-gtk#readme",
   "dependencies": {
-    "bare-gobject-registry": "^1.0.0",
+    "bare-gobject-registry": "^0.1.0",
     "require-asset": "^1.1.0"
   },
   "peerDependencies": {
