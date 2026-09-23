@@ -176,7 +176,7 @@ bare_gtk__emit(js_env_t *env, gpointer object, const char *event, size_t argc, c
   err = js_open_handle_scope(env, &scope);
   assert(err == 0);
 
-  js_value_t *wrapper = bare_gobject__wrapper(env, object);
+  js_value_t *wrapper = bare_gobject__lookup(env, object);
 
   if (wrapper) {
     js_value_t *emit;

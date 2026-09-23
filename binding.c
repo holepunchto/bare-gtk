@@ -13,7 +13,6 @@
 #include "lib/label.h"
 #include "lib/layout-child.h"
 #include "lib/layout-manager.h"
-#include "lib/registry.h"
 #include "lib/style-context.h"
 #include "lib/text.h"
 #include "lib/widget.h"
