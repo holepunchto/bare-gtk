@@ -52,8 +52,25 @@ G_DEFINE_TYPE(BareFrameLayout, bare_frame_layout, GTK_TYPE_LAYOUT_MANAGER)
 
 static void
 bare_frame_layout_measure(GtkLayoutManager *manager, GtkWidget *widget, GtkOrientation orientation, int for_size, int *minimum, int *natural, int *minimum_baseline, int *natural_baseline) {
+  int content = 0;
+
+  for (GtkWidget *child = gtk_widget_get_first_child(widget); child; child = gtk_widget_get_next_sibling(child)) {
+    BareFrameLayoutChild *layout_child = BARE_FRAME_LAYOUT_CHILD(gtk_layout_manager_get_layout_child(manager, child));
+
+    graphene_rect_t *frame = &layout_child->frame;
+
+    int edge = orientation == GTK_ORIENTATION_HORIZONTAL
+      ? (int) (frame->origin.x + frame->size.width)
+      : (int) (frame->origin.y + frame->size.height);
+
+    if (edge > content) content = edge;
+  }
+
+  // A scrolled window asks its child how big it wants to be, and a layout that
+  // knows where it put everything knows what that comes to. The minimum stays
+  // zero, so a viewport is free to be smaller than what it holds.
   *minimum = 0;
-  *natural = 0;
+  *natural = content;
   *minimum_baseline = -1;
   *natural_baseline = -1;
 }

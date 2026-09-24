@@ -8,19 +8,6 @@
 
 #include "bridging.h"
 
-static const char *bare_gtk_controller__events = "bare-gtk-events";
-static const char *bare_gtk_controller__env = "bare-gtk-env";
-
-static uint32_t
-bare_gtk_controller__observed(gpointer controller) {
-  return GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(controller), bare_gtk_controller__events));
-}
-
-static js_env_t *
-bare_gtk_controller__js(gpointer controller) {
-  return g_object_get_data(G_OBJECT(controller), bare_gtk_controller__env);
-}
-
 static js_value_t *
 bare_gtk_event_controller_event_mask(js_env_t *env, js_callback_info_t *info) {
   int err;
@@ -41,7 +28,7 @@ bare_gtk_event_controller_event_mask(js_env_t *env, js_callback_info_t *info) {
   err = bare_gtk__read_uint32(env, argv[1], "events", &events);
   if (err < 0) return NULL;
 
-  g_object_set_data(G_OBJECT(controller), bare_gtk_controller__events, GUINT_TO_POINTER(events));
+  g_object_set_data(G_OBJECT(controller), bare_gtk__events_key, GUINT_TO_POINTER(events));
 
   return NULL;
 }

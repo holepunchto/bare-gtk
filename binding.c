@@ -15,11 +15,14 @@
 #include "lib/layout-manager.h"
 #include "lib/style-context.h"
 #include "lib/text.h"
+#include "lib/adjustment.h"
 #include "lib/device.h"
 #include "lib/event-controller-motion.h"
 #include "lib/event-controller.h"
 #include "lib/gesture-click.h"
 #include "lib/gesture.h"
+#include "lib/scrolled-window.h"
+#include "lib/viewport.h"
 #include "lib/widget.h"
 #include "lib/window.h"
 
@@ -80,6 +83,19 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("gestureClickInit", bare_gtk_gesture_click_init)
 
   V("deviceSource", bare_gtk_device_source)
+
+  V("adjustmentEventMask", bare_gtk_adjustment_event_mask)
+  V("adjustmentValue", bare_gtk_adjustment_value)
+  V("adjustmentUpper", bare_gtk_adjustment_upper)
+
+  V("scrolledWindowInit", bare_gtk_scrolled_window_init)
+  V("scrolledWindowChild", bare_gtk_scrolled_window_child)
+  V("scrolledWindowPolicy", bare_gtk_scrolled_window_policy)
+  V("scrolledWindowAdjustment", bare_gtk_scrolled_window_adjustment)
+
+  V("viewportInit", bare_gtk_viewport_init)
+  V("viewportChild", bare_gtk_viewport_child)
+  V("viewportScrollPolicy", bare_gtk_viewport_scroll_policy)
   V("widgetFirstChild", bare_gtk_widget_first_child)
   V("widgetLastChild", bare_gtk_widget_last_child)
   V("widgetNextSibling", bare_gtk_widget_next_sibling)
@@ -160,6 +176,16 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("WRAP_WORD_CHAR", PANGO_WRAP_WORD_CHAR)
 
   V("FRAME_LAYOUT_EVENT_RESIZE", bare_gtk_frame_layout_event_resize)
+
+  V("ADJUSTMENT_EVENT_VALUE_CHANGED", bare_gtk_adjustment_event_value_changed)
+
+  V("SCROLL_MINIMUM", GTK_SCROLL_MINIMUM)
+  V("SCROLL_NATURAL", GTK_SCROLL_NATURAL)
+
+  V("POLICY_ALWAYS", GTK_POLICY_ALWAYS)
+  V("POLICY_AUTOMATIC", GTK_POLICY_AUTOMATIC)
+  V("POLICY_NEVER", GTK_POLICY_NEVER)
+  V("POLICY_EXTERNAL", GTK_POLICY_EXTERNAL)
 
   V("GESTURE_CLICK_EVENT_PRESSED", bare_gtk_gesture_click_event_pressed)
   V("GESTURE_CLICK_EVENT_RELEASED", bare_gtk_gesture_click_event_released)

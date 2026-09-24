@@ -168,6 +168,21 @@ bare_gtk__create_tag(js_env_t *env, gpointer object) {
   return result;
 }
 
+// An object bound without a struct of ours keeps what the wrapper needs, the
+// delivery mask and the environment to emit into, as object data.
+static const char *bare_gtk__events_key = "bare-gtk-events";
+static const char *bare_gtk__env_key = "bare-gtk-env";
+
+static uint32_t
+bare_gtk__observed(gpointer object) {
+  return GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(object), bare_gtk__events_key));
+}
+
+static js_env_t *
+bare_gtk__js(gpointer object) {
+  return g_object_get_data(G_OBJECT(object), bare_gtk__env_key);
+}
+
 static void
 bare_gtk__emit(js_env_t *env, gpointer object, const char *event, size_t argc, const double args[]) {
   int err;

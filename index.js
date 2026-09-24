@@ -1,3 +1,4 @@
+exports.Adjustment = require('./lib/adjustment')
 exports.CssProvider = require('./lib/css-provider')
 exports.Device = require('./lib/device')
 exports.Display = require('./lib/display')
@@ -13,8 +14,11 @@ exports.FrameLayoutChild = require('./lib/frame-layout-child')
 exports.Label = require('./lib/label')
 exports.LayoutChild = require('./lib/layout-child')
 exports.LayoutManager = require('./lib/layout-manager')
+exports.Viewport = require('./lib/viewport')
 exports.Widget = require('./lib/widget')
 exports.Window = require('./lib/window')
+
+exports.ScrolledWindow = require('./lib/scrolled-window')
 
 exports.StyleContext = require('./lib/style-context')
 

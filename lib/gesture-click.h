@@ -17,23 +17,23 @@ enum {
 
 static void
 bare_gtk_gesture_click__on_pressed(GtkGestureClick *gesture, int n_press, double x, double y, gpointer data) {
-  if ((bare_gtk_controller__observed(gesture) & bare_gtk_gesture_click_event_pressed) == 0) return;
+  if ((bare_gtk__observed(gesture) & bare_gtk_gesture_click_event_pressed) == 0) return;
 
-  bare_gtk__emit(bare_gtk_controller__js(gesture), gesture, "pressed", 3, (const double[]) {n_press, x, y});
+  bare_gtk__emit(bare_gtk__js(gesture), gesture, "pressed", 3, (const double[]) {n_press, x, y});
 }
 
 static void
 bare_gtk_gesture_click__on_released(GtkGestureClick *gesture, int n_press, double x, double y, gpointer data) {
-  if ((bare_gtk_controller__observed(gesture) & bare_gtk_gesture_click_event_released) == 0) return;
+  if ((bare_gtk__observed(gesture) & bare_gtk_gesture_click_event_released) == 0) return;
 
-  bare_gtk__emit(bare_gtk_controller__js(gesture), gesture, "released", 3, (const double[]) {n_press, x, y});
+  bare_gtk__emit(bare_gtk__js(gesture), gesture, "released", 3, (const double[]) {n_press, x, y});
 }
 
 static void
 bare_gtk_gesture_click__on_cancel(GtkGesture *gesture, GdkEventSequence *sequence, gpointer data) {
-  if ((bare_gtk_controller__observed(gesture) & bare_gtk_gesture_click_event_cancel) == 0) return;
+  if ((bare_gtk__observed(gesture) & bare_gtk_gesture_click_event_cancel) == 0) return;
 
-  bare_gtk__emit(bare_gtk_controller__js(gesture), gesture, "cancel", 0, NULL);
+  bare_gtk__emit(bare_gtk__js(gesture), gesture, "cancel", 0, NULL);
 }
 
 static js_value_t *
@@ -42,7 +42,7 @@ bare_gtk_gesture_click_init(js_env_t *env, js_callback_info_t *info) {
 
   GtkGesture *gesture = gtk_gesture_click_new();
 
-  g_object_set_data(G_OBJECT(gesture), bare_gtk_controller__env, env);
+  g_object_set_data(G_OBJECT(gesture), bare_gtk__env_key, env);
 
   g_signal_connect(gesture, "pressed", G_CALLBACK(bare_gtk_gesture_click__on_pressed), NULL);
   g_signal_connect(gesture, "released", G_CALLBACK(bare_gtk_gesture_click__on_released), NULL);
