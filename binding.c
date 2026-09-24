@@ -123,6 +123,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
 
   V("labelInit", bare_gtk_label_init)
   V("labelText", bare_gtk_label_text)
+  V("labelSetMarkup", bare_gtk_label_markup)
   V("labelWrap", bare_gtk_label_wrap)
   V("labelWrapMode", bare_gtk_label_wrap_mode)
   V("labelXalign", bare_gtk_label_xalign)
@@ -138,6 +139,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("styleContextRemoveProviderForDisplay", bare_gtk_style_context_remove_provider_for_display)
 
   V("textMeasure", bare_gtk_text_measure)
+  V("textMeasureMarkup", bare_gtk_text_measure_markup)
 
   V("windowInit", bare_gtk_window_init)
   V("windowTitle", bare_gtk_window_title)

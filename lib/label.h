@@ -191,4 +191,31 @@ bare_gtk_label_justify(js_env_t *env, js_callback_info_t *info) {
   return result;
 }
 
+static js_value_t *
+bare_gtk_label_markup(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  GtkLabel *label;
+  err = bare_gobject__read_tag(env, argv[0], "label", (gpointer *) &label);
+  if (err < 0) return NULL;
+
+  char *markup;
+  err = bare_gtk__read_string(env, argv[1], "markup", &markup);
+  if (err < 0) return NULL;
+
+  gtk_label_set_markup(label, markup);
+
+  g_free(markup);
+
+  return NULL;
+}
+
 #endif // BARE_GTK_LABEL_H
