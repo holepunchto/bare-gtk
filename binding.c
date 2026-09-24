@@ -95,7 +95,8 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
 
   V("viewportInit", bare_gtk_viewport_init)
   V("viewportChild", bare_gtk_viewport_child)
-  V("viewportScrollPolicy", bare_gtk_viewport_scroll_policy)
+  V("viewportHscrollPolicy", bare_gtk_viewport_hscroll_policy)
+  V("viewportVscrollPolicy", bare_gtk_viewport_vscroll_policy)
   V("widgetFirstChild", bare_gtk_widget_first_child)
   V("widgetLastChild", bare_gtk_widget_last_child)
   V("widgetNextSibling", bare_gtk_widget_next_sibling)

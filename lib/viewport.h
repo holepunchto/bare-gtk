@@ -76,32 +76,70 @@ bare_gtk_viewport_child(js_env_t *env, js_callback_info_t *info) {
 // child is given its minimum size along an axis or the size it asked for. A
 // minimum of zero, which a layout that is placed rather than measured reports,
 // leaves nothing to scroll under the default.
+// A viewport is a `GtkScrollable`, and how it answers when asked how big it
+// wants to be is a property of that interface rather than of the viewport.
 static js_value_t *
-bare_gtk_viewport_scroll_policy(js_env_t *env, js_callback_info_t *info) {
+bare_gtk_viewport_hscroll_policy(js_env_t *env, js_callback_info_t *info) {
   int err;
 
-  size_t argc = 3;
-  js_value_t *argv[3];
+  size_t argc = 2;
+  js_value_t *argv[2];
 
   err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
   assert(err == 0);
 
-  assert(argc == 3);
+  assert(argc == 1 || argc == 2);
 
   GtkViewport *viewport;
   err = bare_gobject__read_tag(env, argv[0], "viewport", (gpointer *) &viewport);
   if (err < 0) return NULL;
 
-  uint32_t horizontal, vertical;
+  if (argc == 1) {
+    js_value_t *result;
+    err = js_create_uint32(env, gtk_scrollable_get_hscroll_policy(GTK_SCROLLABLE(viewport)), &result);
+    assert(err == 0);
 
-  err = bare_gtk__read_uint32(env, argv[1], "horizontal", &horizontal);
+    return result;
+  }
+
+  uint32_t policy;
+  err = bare_gtk__read_uint32(env, argv[1], "policy", &policy);
   if (err < 0) return NULL;
 
-  err = bare_gtk__read_uint32(env, argv[2], "vertical", &vertical);
+  gtk_scrollable_set_hscroll_policy(GTK_SCROLLABLE(viewport), policy);
+
+  return NULL;
+}
+
+static js_value_t *
+bare_gtk_viewport_vscroll_policy(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1 || argc == 2);
+
+  GtkViewport *viewport;
+  err = bare_gobject__read_tag(env, argv[0], "viewport", (gpointer *) &viewport);
   if (err < 0) return NULL;
 
-  gtk_scrollable_set_hscroll_policy(GTK_SCROLLABLE(viewport), horizontal);
-  gtk_scrollable_set_vscroll_policy(GTK_SCROLLABLE(viewport), vertical);
+  if (argc == 1) {
+    js_value_t *result;
+    err = js_create_uint32(env, gtk_scrollable_get_vscroll_policy(GTK_SCROLLABLE(viewport)), &result);
+    assert(err == 0);
+
+    return result;
+  }
+
+  uint32_t policy;
+  err = bare_gtk__read_uint32(env, argv[1], "policy", &policy);
+  if (err < 0) return NULL;
+
+  gtk_scrollable_set_vscroll_policy(GTK_SCROLLABLE(viewport), policy);
 
   return NULL;
 }
