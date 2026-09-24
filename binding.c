@@ -15,6 +15,11 @@
 #include "lib/layout-manager.h"
 #include "lib/style-context.h"
 #include "lib/text.h"
+#include "lib/device.h"
+#include "lib/event-controller-motion.h"
+#include "lib/event-controller.h"
+#include "lib/gesture-click.h"
+#include "lib/gesture.h"
 #include "lib/widget.h"
 #include "lib/window.h"
 
@@ -62,6 +67,19 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("widgetInsertAfter", bare_gtk_widget_insert_after)
   V("widgetInsertBefore", bare_gtk_widget_insert_before)
   V("widgetUnparent", bare_gtk_widget_unparent)
+  V("widgetAddController", bare_gtk_widget_add_controller)
+  V("widgetRemoveController", bare_gtk_widget_remove_controller)
+
+  V("eventControllerEventMask", bare_gtk_event_controller_event_mask)
+  V("eventControllerPropagationPhase", bare_gtk_event_controller_propagation_phase)
+  V("eventControllerCurrentEventDevice", bare_gtk_event_controller_current_event_device)
+  V("eventControllerMotionInit", bare_gtk_event_controller_motion_init)
+
+  V("gestureSetState", bare_gtk_gesture_set_state)
+  V("gestureSingleButton", bare_gtk_gesture_single_button)
+  V("gestureClickInit", bare_gtk_gesture_click_init)
+
+  V("deviceSource", bare_gtk_device_source)
   V("widgetFirstChild", bare_gtk_widget_first_child)
   V("widgetLastChild", bare_gtk_widget_last_child)
   V("widgetNextSibling", bare_gtk_widget_next_sibling)
@@ -143,6 +161,30 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
 
   V("FRAME_LAYOUT_EVENT_RESIZE", bare_gtk_frame_layout_event_resize)
 
+  V("GESTURE_CLICK_EVENT_PRESSED", bare_gtk_gesture_click_event_pressed)
+  V("GESTURE_CLICK_EVENT_RELEASED", bare_gtk_gesture_click_event_released)
+  V("GESTURE_CLICK_EVENT_CANCEL", bare_gtk_gesture_click_event_cancel)
+
+  V("EVENT_CONTROLLER_MOTION_EVENT_MOTION", bare_gtk_event_controller_motion_event_motion)
+  V("EVENT_CONTROLLER_MOTION_EVENT_ENTER", bare_gtk_event_controller_motion_event_enter)
+  V("EVENT_CONTROLLER_MOTION_EVENT_LEAVE", bare_gtk_event_controller_motion_event_leave)
+
+  V("PROPAGATION_PHASE_NONE", GTK_PHASE_NONE)
+  V("PROPAGATION_PHASE_CAPTURE", GTK_PHASE_CAPTURE)
+  V("PROPAGATION_PHASE_BUBBLE", GTK_PHASE_BUBBLE)
+  V("PROPAGATION_PHASE_TARGET", GTK_PHASE_TARGET)
+
+  V("EVENT_SEQUENCE_STATE_NONE", GTK_EVENT_SEQUENCE_NONE)
+  V("EVENT_SEQUENCE_STATE_CLAIMED", GTK_EVENT_SEQUENCE_CLAIMED)
+  V("EVENT_SEQUENCE_STATE_DENIED", GTK_EVENT_SEQUENCE_DENIED)
+
+  V("INPUT_SOURCE_MOUSE", GDK_SOURCE_MOUSE)
+  V("INPUT_SOURCE_PEN", GDK_SOURCE_PEN)
+  V("INPUT_SOURCE_KEYBOARD", GDK_SOURCE_KEYBOARD)
+  V("INPUT_SOURCE_TOUCHSCREEN", GDK_SOURCE_TOUCHSCREEN)
+  V("INPUT_SOURCE_TOUCHPAD", GDK_SOURCE_TOUCHPAD)
+  V("INPUT_SOURCE_TRACKPOINT", GDK_SOURCE_TRACKPOINT)
+  V("INPUT_SOURCE_TABLET_PAD", GDK_SOURCE_TABLET_PAD)
   V("WINDOW_EVENT_CLOSE_REQUEST", bare_gtk_window_event_close_request)
 #undef V
 

@@ -500,4 +500,54 @@ bare_gtk_widget_has_css_class(js_env_t *env, js_callback_info_t *info) {
   return result;
 }
 
+static js_value_t *
+bare_gtk_widget_add_controller(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  GtkEventController *controller;
+  err = bare_gobject__read_tag(env, argv[1], "controller", (gpointer *) &controller);
+  if (err < 0) return NULL;
+
+  gtk_widget_add_controller(widget, g_object_ref(controller));
+
+  return NULL;
+}
+
+static js_value_t *
+bare_gtk_widget_remove_controller(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  GtkEventController *controller;
+  err = bare_gobject__read_tag(env, argv[1], "controller", (gpointer *) &controller);
+  if (err < 0) return NULL;
+
+  gtk_widget_remove_controller(widget, controller);
+
+  return NULL;
+}
+
 #endif // BARE_GTK_WIDGET_H
