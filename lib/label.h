@@ -192,7 +192,7 @@ bare_gtk_label_justify(js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bare_gtk_label_markup(js_env_t *env, js_callback_info_t *info) {
+bare_gtk_label_set_markup(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 2;

@@ -123,7 +123,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
 
   V("labelInit", bare_gtk_label_init)
   V("labelText", bare_gtk_label_text)
-  V("labelSetMarkup", bare_gtk_label_markup)
+  V("labelSetMarkup", bare_gtk_label_set_markup)
   V("labelWrap", bare_gtk_label_wrap)
   V("labelWrapMode", bare_gtk_label_wrap_mode)
   V("labelXalign", bare_gtk_label_xalign)
