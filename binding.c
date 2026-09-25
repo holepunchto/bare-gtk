@@ -10,6 +10,10 @@
 #include "lib/display.h"
 #include "lib/fixed.h"
 #include "lib/frame-layout.h"
+#include "lib/editable.h"
+#include "lib/entry.h"
+#include "lib/text-buffer.h"
+#include "lib/text-view.h"
 #include "lib/label.h"
 #include "lib/layout-child.h"
 #include "lib/layout-manager.h"
@@ -19,6 +23,7 @@
 #include "lib/text.h"
 #include "lib/adjustment.h"
 #include "lib/device.h"
+#include "lib/event-controller-focus.h"
 #include "lib/event-controller-motion.h"
 #include "lib/event-controller.h"
 #include "lib/gesture-click.h"
@@ -78,6 +83,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("eventControllerEventMask", bare_gtk_event_controller_event_mask)
   V("eventControllerPropagationPhase", bare_gtk_event_controller_propagation_phase)
   V("eventControllerCurrentEventDevice", bare_gtk_event_controller_current_event_device)
+  V("eventControllerFocusInit", bare_gtk_event_controller_focus_init)
   V("eventControllerMotionInit", bare_gtk_event_controller_motion_init)
 
   V("gestureSetState", bare_gtk_gesture_set_state)
@@ -131,6 +137,35 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("picturePaintable", bare_gtk_picture_paintable)
   V("pictureKeepAspectRatio", bare_gtk_picture_keep_aspect_ratio)
   V("pictureCanShrink", bare_gtk_picture_can_shrink)
+
+  V("widgetGrabFocus", bare_gtk_widget_grab_focus)
+  V("widgetSetRootFocus", bare_gtk_widget_set_root_focus)
+
+  V("entryInit", bare_gtk_entry_init)
+  V("entryEventMask", bare_gtk_entry_event_mask)
+  V("entryGrabFocusWithoutSelecting", bare_gtk_entry_grab_focus_without_selecting)
+  V("entryPlaceholderText", bare_gtk_entry_placeholder_text)
+  V("entryVisibility", bare_gtk_entry_visibility)
+  V("entryInputPurpose", bare_gtk_entry_input_purpose)
+  V("entryInputHints", bare_gtk_entry_input_hints)
+
+  V("editableText", bare_gtk_editable_text)
+  V("editableEditable", bare_gtk_editable_editable)
+  V("editableSelectionBounds", bare_gtk_editable_selection_bounds)
+  V("editableSelectRegion", bare_gtk_editable_select_region)
+
+  V("textViewInit", bare_gtk_text_view_init)
+  V("textViewEventMask", bare_gtk_text_view_event_mask)
+  V("textViewBuffer", bare_gtk_text_view_buffer)
+  V("textViewEditable", bare_gtk_text_view_editable)
+  V("textViewWrapMode", bare_gtk_text_view_wrap_mode)
+  V("textViewInputPurpose", bare_gtk_text_view_input_purpose)
+  V("textViewInputHints", bare_gtk_text_view_input_hints)
+
+  V("textBufferEventMask", bare_gtk_text_buffer_event_mask)
+  V("textBufferText", bare_gtk_text_buffer_text)
+  V("textBufferSelectionBounds", bare_gtk_text_buffer_selection_bounds)
+  V("textBufferSelectRange", bare_gtk_text_buffer_select_range)
 
   V("labelInit", bare_gtk_label_init)
   V("labelText", bare_gtk_label_text)
@@ -225,6 +260,25 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("INPUT_SOURCE_TOUCHPAD", GDK_SOURCE_TOUCHPAD)
   V("INPUT_SOURCE_TRACKPOINT", GDK_SOURCE_TRACKPOINT)
   V("INPUT_SOURCE_TABLET_PAD", GDK_SOURCE_TABLET_PAD)
+  V("EVENT_CONTROLLER_FOCUS_EVENT_ENTER", bare_gtk_event_controller_focus_event_enter)
+  V("EVENT_CONTROLLER_FOCUS_EVENT_LEAVE", bare_gtk_event_controller_focus_event_leave)
+
+  V("ENTRY_EVENT_CHANGED", bare_gtk_entry_event_changed)
+  V("ENTRY_EVENT_ACTIVATE", bare_gtk_entry_event_activate)
+  V("ENTRY_EVENT_CURSOR_POSITION", bare_gtk_entry_event_cursor_position)
+  V("ENTRY_EVENT_INSERT_TEXT", bare_gtk_entry_event_insert_text)
+  V("ENTRY_EVENT_DELETE_TEXT", bare_gtk_entry_event_delete_text)
+  V("ENTRY_EVENT_HAS_FOCUS", bare_gtk_entry_event_has_focus)
+  V("ENTRY_EVENT_IS_FOCUS", bare_gtk_entry_event_is_focus)
+
+  V("TEXT_VIEW_EVENT_HAS_FOCUS", bare_gtk_text_view_event_has_focus)
+  V("TEXT_VIEW_EVENT_IS_FOCUS", bare_gtk_text_view_event_is_focus)
+
+  V("TEXT_BUFFER_EVENT_CHANGED", bare_gtk_text_buffer_event_changed)
+  V("TEXT_BUFFER_EVENT_CURSOR_POSITION", bare_gtk_text_buffer_event_cursor_position)
+  V("TEXT_BUFFER_EVENT_INSERT_TEXT", bare_gtk_text_buffer_event_insert_text)
+  V("TEXT_BUFFER_EVENT_DELETE_RANGE", bare_gtk_text_buffer_event_delete_range)
+
   V("WINDOW_EVENT_CLOSE_REQUEST", bare_gtk_window_event_close_request)
 #undef V
 

@@ -550,4 +550,57 @@ bare_gtk_widget_remove_controller(js_env_t *env, js_callback_info_t *info) {
   return NULL;
 }
 
+
+static js_value_t *
+bare_gtk_widget_grab_focus(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 1;
+  js_value_t *argv[1];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  js_value_t *result;
+  err = js_get_boolean(env, gtk_widget_grab_focus(widget), &result);
+  assert(err == 0);
+
+  return result;
+}
+
+// GTK gives focus to a widget and takes it away through the root that holds
+// it, so letting go is a different call from taking hold.
+static js_value_t *
+bare_gtk_widget_set_root_focus(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  GtkWidget *focus;
+  err = bare_gtk__read_tag_or_null(env, argv[1], "focus", (gpointer *) &focus);
+  if (err < 0) return NULL;
+
+  GtkRoot *root = gtk_widget_get_root(widget);
+
+  if (root != NULL) gtk_root_set_focus(root, focus);
+
+  return NULL;
+}
+
 #endif // BARE_GTK_WIDGET_H

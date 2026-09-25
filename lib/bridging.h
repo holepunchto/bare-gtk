@@ -190,6 +190,45 @@ bare_gtk__observed(gpointer object) {
   return GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(object), bare_gtk__events_key));
 }
 
+// A range and the text about to replace it, which is what an editable reports
+// about an edit before it happens.
+static void
+bare_gtk__emit_replacement(js_env_t *env, gpointer object, const char *event, const char *text, int start, int end) {
+  int err;
+
+  js_handle_scope_t *scope;
+  err = js_open_handle_scope(env, &scope);
+  assert(err == 0);
+
+  js_value_t *wrapper = bare_gobject__lookup(env, object);
+
+  if (wrapper) {
+    js_value_t *emit;
+    err = js_get_named_property(env, wrapper, "emit", &emit);
+    assert(err == 0);
+
+    js_value_t *argv[4];
+
+    err = js_create_string_utf8(env, (const utf8_t *) event, (size_t) -1, &argv[0]);
+    assert(err == 0);
+
+    err = js_create_string_utf8(env, (const utf8_t *) (text == NULL ? "" : text), (size_t) -1, &argv[1]);
+    assert(err == 0);
+
+    err = js_create_int32(env, start, &argv[2]);
+    assert(err == 0);
+
+    err = js_create_int32(env, end, &argv[3]);
+    assert(err == 0);
+
+    err = js_call_function(env, wrapper, emit, 4, argv, NULL);
+    assert(err == 0 || err == js_pending_exception);
+  }
+
+  err = js_close_handle_scope(env, scope);
+  assert(err == 0);
+}
+
 static js_env_t *
 bare_gtk__js(gpointer object) {
   return g_object_get_data(G_OBJECT(object), bare_gtk__env_key);
