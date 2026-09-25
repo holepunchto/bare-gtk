@@ -12,6 +12,8 @@
 #include "lib/frame-layout.h"
 #include "lib/editable.h"
 #include "lib/entry.h"
+#include "lib/spinner.h"
+#include "lib/switch.h"
 #include "lib/text-buffer.h"
 #include "lib/text-view.h"
 #include "lib/label.h"
@@ -141,6 +143,15 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("widgetGrabFocus", bare_gtk_widget_grab_focus)
   V("widgetSetRootFocus", bare_gtk_widget_set_root_focus)
 
+  V("widgetSensitive", bare_gtk_widget_sensitive)
+
+  V("spinnerInit", bare_gtk_spinner_init)
+  V("spinnerSpinning", bare_gtk_spinner_spinning)
+
+  V("switchInit", bare_gtk_switch_init)
+  V("switchEventMask", bare_gtk_switch_event_mask)
+  V("switchActive", bare_gtk_switch_active)
+
   V("entryInit", bare_gtk_entry_init)
   V("entryEventMask", bare_gtk_entry_event_mask)
   V("entryGrabFocusWithoutSelecting", bare_gtk_entry_grab_focus_without_selecting)
@@ -262,6 +273,8 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("INPUT_SOURCE_TABLET_PAD", GDK_SOURCE_TABLET_PAD)
   V("EVENT_CONTROLLER_FOCUS_EVENT_ENTER", bare_gtk_event_controller_focus_event_enter)
   V("EVENT_CONTROLLER_FOCUS_EVENT_LEAVE", bare_gtk_event_controller_focus_event_leave)
+
+  V("SWITCH_EVENT_ACTIVE", bare_gtk_switch_event_active)
 
   V("ENTRY_EVENT_CHANGED", bare_gtk_entry_event_changed)
   V("ENTRY_EVENT_ACTIVATE", bare_gtk_entry_event_activate)
