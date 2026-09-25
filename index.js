@@ -14,6 +14,8 @@ exports.FrameLayoutChild = require('./lib/frame-layout-child')
 exports.Label = require('./lib/label')
 exports.LayoutChild = require('./lib/layout-child')
 exports.LayoutManager = require('./lib/layout-manager')
+exports.Paintable = require('./lib/paintable')
+exports.Picture = require('./lib/picture')
 exports.Viewport = require('./lib/viewport')
 exports.Widget = require('./lib/widget')
 exports.Window = require('./lib/window')
@@ -21,6 +23,7 @@ exports.Window = require('./lib/window')
 exports.ScrolledWindow = require('./lib/scrolled-window')
 
 exports.StyleContext = require('./lib/style-context')
+exports.Texture = require('./lib/texture')
 
 exports.constants = require('./lib/constants')
 

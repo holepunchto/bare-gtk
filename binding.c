@@ -13,7 +13,9 @@
 #include "lib/label.h"
 #include "lib/layout-child.h"
 #include "lib/layout-manager.h"
+#include "lib/picture.h"
 #include "lib/style-context.h"
+#include "lib/texture.h"
 #include "lib/text.h"
 #include "lib/adjustment.h"
 #include "lib/device.h"
@@ -120,6 +122,15 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("frameLayoutInit", bare_gtk_frame_layout_init)
   V("frameLayoutEventMask", bare_gtk_frame_layout_event_mask)
   V("frameLayoutChildFrame", bare_gtk_frame_layout_child_frame)
+
+  V("textureNewFromFilename", bare_gtk_texture_new_from_filename)
+  V("textureWidth", bare_gtk_texture_width)
+  V("textureHeight", bare_gtk_texture_height)
+
+  V("pictureInit", bare_gtk_picture_init)
+  V("picturePaintable", bare_gtk_picture_paintable)
+  V("pictureKeepAspectRatio", bare_gtk_picture_keep_aspect_ratio)
+  V("pictureCanShrink", bare_gtk_picture_can_shrink)
 
   V("labelInit", bare_gtk_label_init)
   V("labelText", bare_gtk_label_text)

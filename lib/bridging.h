@@ -134,6 +134,18 @@ bare_gtk__read_string_or_null(js_env_t *env, js_value_t *value, const char *name
   return bare_gtk__read_string(env, value, name, result);
 }
 
+// A GTK call that fails sets a `GError` and answers with nothing, which is a
+// thrown error here, as an `HRESULT` is in the WinUI binding.
+static int
+bare_gtk__throw(js_env_t *env, GError *error) {
+  int err = js_throw_error(env, NULL, error->message);
+  assert(err == 0);
+
+  g_error_free(error);
+
+  return -1;
+}
+
 static int
 bare_gtk__read_tag_or_null(js_env_t *env, js_value_t *value, const char *name, gpointer *result) {
   int err;
