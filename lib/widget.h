@@ -105,6 +105,60 @@ bare_gtk_widget_can_target(js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
+bare_gtk_widget_cursor(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1 || argc == 2);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  if (argc == 1) return bare_gtk__create_tag(env, gtk_widget_get_cursor(widget));
+
+  GdkCursor *cursor;
+  err = bare_gtk__read_tag_or_null(env, argv[1], "cursor", (gpointer *) &cursor);
+  if (err < 0) return NULL;
+
+  gtk_widget_set_cursor(widget, cursor);
+
+  return NULL;
+}
+
+static js_value_t *
+bare_gtk_widget_set_cursor_from_name(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  char *name;
+  err = bare_gtk__read_string_or_null(env, argv[1], "name", &name);
+  if (err < 0) return NULL;
+
+  gtk_widget_set_cursor_from_name(widget, name);
+
+  g_free(name);
+
+  return NULL;
+}
+
+static js_value_t *
 bare_gtk_widget_size_request(js_env_t *env, js_callback_info_t *info) {
   int err;
 

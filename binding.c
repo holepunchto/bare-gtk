@@ -7,6 +7,7 @@
 
 #include "lib/bridging.h"
 #include "lib/css-provider.h"
+#include "lib/cursor.h"
 #include "lib/display.h"
 #include "lib/fixed.h"
 #include "lib/frame-layout.h"
@@ -29,6 +30,7 @@
 #include "lib/event-controller-motion.h"
 #include "lib/event-controller.h"
 #include "lib/gesture-click.h"
+#include "lib/gesture-drag.h"
 #include "lib/gesture.h"
 #include "lib/scrolled-window.h"
 #include "lib/viewport.h"
@@ -91,6 +93,9 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("gestureSetState", bare_gtk_gesture_set_state)
   V("gestureSingleButton", bare_gtk_gesture_single_button)
   V("gestureClickInit", bare_gtk_gesture_click_init)
+  V("gestureDragInit", bare_gtk_gesture_drag_init)
+  V("gestureDragStartPoint", bare_gtk_gesture_drag_start_point)
+  V("gestureDragOffset", bare_gtk_gesture_drag_offset)
 
   V("deviceSource", bare_gtk_device_source)
 
@@ -145,6 +150,16 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("widgetSetRootFocus", bare_gtk_widget_set_root_focus)
 
   V("widgetCanTarget", bare_gtk_widget_can_target)
+  V("widgetCursor", bare_gtk_widget_cursor)
+  V("widgetSetCursorFromName", bare_gtk_widget_set_cursor_from_name)
+
+  V("cursorNewFromName", bare_gtk_cursor_new_from_name)
+  V("cursorNewFromTexture", bare_gtk_cursor_new_from_texture)
+  V("cursorName", bare_gtk_cursor_name)
+  V("cursorFallback", bare_gtk_cursor_fallback)
+  V("cursorTexture", bare_gtk_cursor_texture)
+  V("cursorHotspotX", bare_gtk_cursor_hotspot_x)
+  V("cursorHotspotY", bare_gtk_cursor_hotspot_y)
   V("widgetSensitive", bare_gtk_widget_sensitive)
 
   V("spinnerInit", bare_gtk_spinner_init)
@@ -260,6 +275,11 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("GESTURE_CLICK_EVENT_PRESSED", bare_gtk_gesture_click_event_pressed)
   V("GESTURE_CLICK_EVENT_RELEASED", bare_gtk_gesture_click_event_released)
   V("GESTURE_CLICK_EVENT_CANCEL", bare_gtk_gesture_click_event_cancel)
+
+  V("GESTURE_DRAG_EVENT_DRAG_BEGIN", bare_gtk_gesture_drag_event_drag_begin)
+  V("GESTURE_DRAG_EVENT_DRAG_UPDATE", bare_gtk_gesture_drag_event_drag_update)
+  V("GESTURE_DRAG_EVENT_DRAG_END", bare_gtk_gesture_drag_event_drag_end)
+  V("GESTURE_DRAG_EVENT_CANCEL", bare_gtk_gesture_drag_event_cancel)
 
   V("EVENT_CONTROLLER_MOTION_EVENT_MOTION", bare_gtk_event_controller_motion_event_motion)
   V("EVENT_CONTROLLER_MOTION_EVENT_ENTER", bare_gtk_event_controller_motion_event_enter)
