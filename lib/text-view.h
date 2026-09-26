@@ -202,4 +202,37 @@ BARE_GTK_TEXT_VIEW_ENUM(input_purpose, gtk_text_view_get_input_purpose, gtk_text
 BARE_GTK_TEXT_VIEW_ENUM(input_hints, gtk_text_view_get_input_hints, gtk_text_view_set_input_hints, GtkInputHints)
 #undef BARE_GTK_TEXT_VIEW_ENUM
 
+
+static js_value_t *
+bare_gtk_text_view_justification(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1 || argc == 2);
+
+  GtkTextView *text_view;
+  err = bare_gobject__read_tag(env, argv[0], "textView", (gpointer *) &text_view);
+  if (err < 0) return NULL;
+
+  js_value_t *result = NULL;
+
+  if (argc == 1) {
+    err = js_create_int32(env, gtk_text_view_get_justification(text_view), &result);
+    assert(err == 0);
+  } else {
+    int32_t justification;
+    err = bare_gtk__read_int32(env, argv[1], "justification", &justification);
+    if (err < 0) return NULL;
+
+    gtk_text_view_set_justification(text_view, justification);
+  }
+
+  return result;
+}
+
 #endif // BARE_GTK_TEXT_VIEW_H

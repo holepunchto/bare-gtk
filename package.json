@@ -5,8 +5,8 @@
   "exports": {
     "./package": "./package.json",
     ".": "./index.js",
-    "./text": "./lib/text.js",
-    "./runtime": "./runtime.js"
+    "./runtime": "./runtime.js",
+    "./*": "./lib/*.js"
   },
   "files": [
     "index.js",

@@ -130,6 +130,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("frameLayoutInit", bare_gtk_frame_layout_init)
   V("frameLayoutEventMask", bare_gtk_frame_layout_event_mask)
   V("frameLayoutChildFrame", bare_gtk_frame_layout_child_frame)
+  V("frameLayoutChildTransform", bare_gtk_frame_layout_child_transform)
 
   V("textureNewFromFilename", bare_gtk_texture_new_from_filename)
   V("textureWidth", bare_gtk_texture_width)
@@ -166,6 +167,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("editableSelectRegion", bare_gtk_editable_select_region)
 
   V("textViewInit", bare_gtk_text_view_init)
+  V("textViewJustification", bare_gtk_text_view_justification)
   V("textViewEventMask", bare_gtk_text_view_event_mask)
   V("textViewBuffer", bare_gtk_text_view_buffer)
   V("textViewEditable", bare_gtk_text_view_editable)
@@ -183,6 +185,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("labelSetMarkup", bare_gtk_label_set_markup)
   V("labelWrap", bare_gtk_label_wrap)
   V("labelWrapMode", bare_gtk_label_wrap_mode)
+  V("entryAlignment", bare_gtk_entry_alignment)
   V("labelXalign", bare_gtk_label_xalign)
   V("labelYalign", bare_gtk_label_yalign)
   V("labelJustify", bare_gtk_label_justify)

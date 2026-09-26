@@ -32,5 +32,3 @@ exports.TextView = require('./lib/text-view')
 exports.Texture = require('./lib/texture')
 
 exports.constants = require('./lib/constants')
-
-require('./lib/handle').expose(Object.values(exports))

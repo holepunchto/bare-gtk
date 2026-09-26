@@ -297,4 +297,36 @@ bare_gtk_entry_grab_focus_without_selecting(js_env_t *env, js_callback_info_t *i
   return result;
 }
 
+static js_value_t *
+bare_gtk_entry_alignment(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1 || argc == 2);
+
+  GtkEntry *entry;
+  err = bare_gobject__read_tag(env, argv[0], "entry", (gpointer *) &entry);
+  if (err < 0) return NULL;
+
+  js_value_t *result = NULL;
+
+  if (argc == 1) {
+    err = js_create_double(env, gtk_entry_get_alignment(entry), &result);
+    assert(err == 0);
+  } else {
+    double alignment;
+    err = bare_gtk__read_double(env, argv[1], "alignment", &alignment);
+    if (err < 0) return NULL;
+
+    gtk_entry_set_alignment(entry, (float) alignment);
+  }
+
+  return result;
+}
+
 #endif // BARE_GTK_ENTRY_H

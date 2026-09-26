@@ -23,6 +23,8 @@ struct _BareFrameLayoutChild {
   GtkLayoutChild handle;
 
   graphene_rect_t frame;
+  graphene_matrix_t transform;
+  bool transformed;
 };
 
 G_DEFINE_TYPE(BareFrameLayoutChild, bare_frame_layout_child, GTK_TYPE_LAYOUT_CHILD)
@@ -30,6 +32,7 @@ G_DEFINE_TYPE(BareFrameLayoutChild, bare_frame_layout_child, GTK_TYPE_LAYOUT_CHI
 static void
 bare_frame_layout_child_init(BareFrameLayoutChild *self) {
   self->frame = GRAPHENE_RECT_INIT(0, 0, 0, 0);
+  self->transformed = false;
 }
 
 static void
@@ -96,6 +99,13 @@ bare_frame_layout_allocate(GtkLayoutManager *manager, GtkWidget *widget, int wid
     graphene_rect_t *frame = &layout_child->frame;
 
     GskTransform *transform = gsk_transform_translate(NULL, &GRAPHENE_POINT_INIT(frame->origin.x, frame->origin.y));
+
+    // A widget cannot transform itself: what it is drawn through is the
+    // transform its parent allocates it with, so a child's own is composed
+    // onto the translation that places it.
+    if (layout_child->transformed) {
+      transform = gsk_transform_matrix(transform, &layout_child->transform);
+    }
 
     gtk_widget_allocate(child, (int) frame->size.width, (int) frame->size.height, -1, transform);
   }
@@ -221,6 +231,55 @@ bare_gtk_frame_layout_child_frame(js_env_t *env, js_callback_info_t *info) {
   }
 
   return result;
+}
+
+// A `graphene_matrix_t` is sixteen numbers in the order CSS gives `matrix3d`
+// its own, which is the row-major order graphene reads them in.
+static js_value_t *
+bare_gtk_frame_layout_child_transform(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  BareFrameLayoutChild *layout_child;
+  err = bare_gobject__read_type(env, argv[0], "layoutChild", BARE_TYPE_FRAME_LAYOUT_CHILD, (gpointer *) &layout_child);
+  if (err < 0) return NULL;
+
+  js_value_type_t type;
+  err = js_typeof(env, argv[1], &type);
+  assert(err == 0);
+
+  if (type == js_null) {
+    layout_child->transformed = false;
+  } else {
+    float components[16];
+
+    for (uint32_t i = 0; i < 16; i++) {
+      js_value_t *element;
+      err = js_get_element(env, argv[1], i, &element);
+      assert(err == 0);
+
+      double component;
+      err = bare_gtk__read_double(env, element, "transform", &component);
+      if (err < 0) return NULL;
+
+      components[i] = (float) component;
+    }
+
+    graphene_matrix_init_from_float(&layout_child->transform, components);
+
+    layout_child->transformed = true;
+  }
+
+  gtk_layout_manager_layout_changed(gtk_layout_child_get_layout_manager(GTK_LAYOUT_CHILD(layout_child)));
+
+  return NULL;
 }
 
 #endif // BARE_GTK_FRAME_LAYOUT_H
