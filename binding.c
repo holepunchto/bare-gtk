@@ -144,6 +144,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("widgetGrabFocus", bare_gtk_widget_grab_focus)
   V("widgetSetRootFocus", bare_gtk_widget_set_root_focus)
 
+  V("widgetCanTarget", bare_gtk_widget_can_target)
   V("widgetSensitive", bare_gtk_widget_sensitive)
 
   V("spinnerInit", bare_gtk_spinner_init)

@@ -73,6 +73,38 @@ bare_gtk_widget_sensitive(js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
+bare_gtk_widget_can_target(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 1 || argc == 2);
+
+  GtkWidget *widget;
+  err = bare_gobject__read_tag(env, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  js_value_t *result = NULL;
+
+  if (argc == 1) {
+    err = js_get_boolean(env, gtk_widget_get_can_target(widget), &result);
+    assert(err == 0);
+  } else {
+    bool can_target;
+    err = bare_gtk__read_bool(env, argv[1], "can_target", &can_target);
+    if (err < 0) return NULL;
+
+    gtk_widget_set_can_target(widget, can_target);
+  }
+
+  return result;
+}
+
+static js_value_t *
 bare_gtk_widget_size_request(js_env_t *env, js_callback_info_t *info) {
   int err;
 
