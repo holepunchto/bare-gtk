@@ -218,4 +218,41 @@ bare_gtk_label_set_markup(js_env_t *env, js_callback_info_t *info) {
   return NULL;
 }
 
+#define V(name, get, set, type) \
+  static js_value_t * \
+  name(js_env_t *env, js_callback_info_t *info) { \
+    int err; \
+\
+    size_t argc = 2; \
+    js_value_t *argv[2]; \
+\
+    err = js_get_callback_info(env, info, &argc, argv, NULL, NULL); \
+    assert(err == 0); \
+\
+    assert(argc == 1 || argc == 2); \
+\
+    GtkLabel *label; \
+    err = bare_gobject__read_tag(env, argv[0], "label", (gpointer *) &label); \
+    if (err < 0) return NULL; \
+\
+    js_value_t *result = NULL; \
+\
+    if (argc == 1) { \
+      err = js_create_int32(env, get(label), &result); \
+      assert(err == 0); \
+    } else { \
+      int32_t value; \
+      err = bare_gtk__read_int32(env, argv[1], #name, &value); \
+      if (err < 0) return NULL; \
+\
+      set(label, (type) value); \
+    } \
+\
+    return result; \
+  }
+
+V(bare_gtk_label_lines, gtk_label_get_lines, gtk_label_set_lines, int)
+V(bare_gtk_label_ellipsize, gtk_label_get_ellipsize, gtk_label_set_ellipsize, PangoEllipsizeMode)
+#undef V
+
 #endif // BARE_GTK_LABEL_H
