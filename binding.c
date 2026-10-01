@@ -44,23 +44,8 @@
 #include "lib/window.h"
 
 static js_value_t *
-bare_gtk_init_check(js_env_t *env, js_callback_info_t *info) {
-  int err;
-
-  js_value_t *result;
-  err = js_get_boolean(env, gtk_init_check(), &result);
-  assert(err == 0);
-
-  return result;
-}
-
-static js_value_t *
 bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   int err;
-
-  // Making a widget before GTK is initialised crashes. Under the runtime this
-  // does nothing, because the runtime has already done it.
-  gtk_init_check();
 
   bare_gtk_state_t *state = bare_gtk_state_create(env, exports);
 
@@ -72,8 +57,6 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
     err = js_set_named_property(env, exports, name, val); \
     assert(err == 0); \
   }
-
-  V("initCheck", bare_gtk_init_check)
 
   // The registry's own functions take the registry, not the state around it.
 #define R(name, fn) \
