@@ -4,11 +4,19 @@
   "description": "GTK bindings and runtime for Bare",
   "exports": {
     "./package": "./package.json",
-    ".": "./index.js",
-    "./runtime": "./runtime.js"
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./runtime": "./runtime.js",
+    "./*": {
+      "types": "./lib/*.d.ts",
+      "default": "./lib/*.js"
+    }
   },
   "files": [
     "index.js",
+    "index.d.ts",
     "runtime.js",
     "binding.c",
     "binding.js",
@@ -33,6 +41,7 @@
   },
   "homepage": "https://github.com/holepunchto/bare-gtk#readme",
   "dependencies": {
+    "bare-gobject-registry": "^0.1.0",
     "require-asset": "^1.1.0"
   },
   "peerDependencies": {

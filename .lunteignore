@@ -1,0 +1,14 @@
+# https://github.com/holepunchto/lunte/issues/17
+lib/adjustment.d.ts
+lib/dialog.d.ts
+lib/entry.d.ts
+lib/event-controller-focus.d.ts
+lib/event-controller-motion.d.ts
+lib/frame-layout.d.ts
+lib/gesture-click.d.ts
+lib/gesture-drag.d.ts
+lib/settings.d.ts
+lib/switch.d.ts
+lib/text-buffer.d.ts
+lib/text-view.d.ts
+lib/window.d.ts
