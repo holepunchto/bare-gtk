@@ -4,6 +4,7 @@ lib/dialog.d.ts
 lib/entry.d.ts
 lib/event-controller-focus.d.ts
 lib/event-controller-motion.d.ts
+lib/frame-clock.d.ts
 lib/frame-layout.d.ts
 lib/gesture-click.d.ts
 lib/gesture-drag.d.ts
