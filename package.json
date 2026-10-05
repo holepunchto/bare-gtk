@@ -1,6 +1,6 @@
 {
   "name": "bare-gtk",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "GTK bindings and runtime for Bare",
   "exports": {
     "./package": "./package.json",
