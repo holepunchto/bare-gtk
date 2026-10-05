@@ -23,6 +23,9 @@ declare namespace GDKFrameClock {
   export interface Events {
     /** A frame has been laid out and drawn. */
     'after-paint': []
+
+    /** A frame is about to be laid out and drawn, so changes made now are part of it. */
+    update: []
   }
 }
 

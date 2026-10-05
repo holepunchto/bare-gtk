@@ -10,7 +10,17 @@
 
 enum {
   bare_gtk_frame_clock_event_after_paint = 1 << 0,
+  bare_gtk_frame_clock_event_update = 1 << 1,
 };
+
+static void
+bare_gtk_frame_clock__on_update(GdkFrameClock *clock, gpointer data) {
+  bare_gtk_state_t *state = data;
+
+  if ((bare_gtk__observed(state, clock) & bare_gtk_frame_clock_event_update) == 0) return;
+
+  bare_gtk__emit(state, clock, "update", 0, NULL);
+}
 
 static void
 bare_gtk_frame_clock__on_after_paint(GdkFrameClock *clock, gpointer data) {
@@ -46,6 +56,7 @@ bare_gtk_frame_clock_event_mask(js_env_t *env, js_callback_info_t *info) {
 
   if (bare_gtk__observe(state, clock, events)) {
     g_signal_connect(clock, "after-paint", G_CALLBACK(bare_gtk_frame_clock__on_after_paint), state);
+    g_signal_connect(clock, "update", G_CALLBACK(bare_gtk_frame_clock__on_update), state);
   }
 
   return NULL;

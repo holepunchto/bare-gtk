@@ -1,7 +1,14 @@
 import GObject = require('./object')
+import GTKWindow = require('./window')
 
 /** The application, as a `GtkApplication`. It quits once it has no windows and nothing holds it. */
 interface GTKApplication extends GObject {
+  /**
+   * The window that was most recently active, or `null` if there are none. Until a window has been
+   * focused, this is the window added most recently.
+   */
+  readonly activeWindow: GTKWindow | null
+
   /** Keep the application running while it has no windows. */
   hold(): this
 

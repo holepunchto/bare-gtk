@@ -251,6 +251,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("surfaceDisplay", bare_gtk_surface_display)
 
   V("applicationGetDefault", bare_gtk_application_get_default)
+  V("applicationActiveWindow", bare_gtk_application_active_window)
   V("applicationHold", bare_gtk_application_hold)
   V("applicationRelease", bare_gtk_application_release)
 
@@ -335,6 +336,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("GESTURE_DRAG_EVENT_CANCEL", bare_gtk_gesture_drag_event_cancel)
 
   V("FRAME_CLOCK_EVENT_AFTER_PAINT", bare_gtk_frame_clock_event_after_paint)
+  V("FRAME_CLOCK_EVENT_UPDATE", bare_gtk_frame_clock_event_update)
 
   V("SETTINGS_EVENT_PREFER_DARK_THEME", bare_gtk_settings_event_prefer_dark_theme)
   V("SETTINGS_EVENT_XFT_DPI", bare_gtk_settings_event_xft_dpi)
