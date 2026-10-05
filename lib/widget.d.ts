@@ -1,5 +1,6 @@
 import GObject = require('./object')
 import GDKCursor = require('./cursor')
+import GDKFrameClock = require('./frame-clock')
 import GTKEventController = require('./event-controller')
 import GTKLayoutManager = require('./layout-manager')
 
@@ -48,6 +49,9 @@ interface GTKWidget<M extends Record<keyof M, unknown[]> = {}> extends GObject<M
 
   /** The cursor shown over the widget, or `null` for the cursor of its parent. */
   cursor: GDKCursor | null
+
+  /** The clock the widget draws by, or `null` before it is realized. */
+  readonly frameClock: GDKFrameClock | null
 
   /** Whether the widget responds to input. */
   sensitive: boolean

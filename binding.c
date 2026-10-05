@@ -37,6 +37,8 @@
 #include "lib/gesture-click.h"
 #include "lib/gesture-drag.h"
 #include "lib/gesture.h"
+#include "lib/application.h"
+#include "lib/frame-clock.h"
 #include "lib/settings.h"
 #include "lib/scrolled-window.h"
 #include "lib/viewport.h"
@@ -75,6 +77,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   R("adopt", bare_gobject_adopt)
 
   V("widgetVisible", bare_gtk_widget_visible)
+  V("widgetFrameClock", bare_gtk_widget_frame_clock)
   V("widgetSizeRequest", bare_gtk_widget_size_request)
   V("widgetOpacity", bare_gtk_widget_opacity)
   V("widgetOverflow", bare_gtk_widget_overflow)
@@ -247,6 +250,16 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("surfaceScaleFactor", bare_gtk_surface_scale_factor)
   V("surfaceDisplay", bare_gtk_surface_display)
 
+  V("applicationGetDefault", bare_gtk_application_get_default)
+  V("applicationHold", bare_gtk_application_hold)
+  V("applicationRelease", bare_gtk_application_release)
+
+  V("frameClockEventMask", bare_gtk_frame_clock_event_mask)
+  V("frameClockBeginUpdating", bare_gtk_frame_clock_begin_updating)
+  V("frameClockEndUpdating", bare_gtk_frame_clock_end_updating)
+  V("frameClockFrameCounter", bare_gtk_frame_clock_frame_counter)
+  V("frameClockFrameTime", bare_gtk_frame_clock_frame_time)
+
   V("settingsGetDefault", bare_gtk_settings_get_default)
   V("settingsEventMask", bare_gtk_settings_event_mask)
   V("settingsPreferDarkTheme", bare_gtk_settings_prefer_dark_theme)
@@ -320,6 +333,8 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("GESTURE_DRAG_EVENT_DRAG_UPDATE", bare_gtk_gesture_drag_event_drag_update)
   V("GESTURE_DRAG_EVENT_DRAG_END", bare_gtk_gesture_drag_event_drag_end)
   V("GESTURE_DRAG_EVENT_CANCEL", bare_gtk_gesture_drag_event_cancel)
+
+  V("FRAME_CLOCK_EVENT_AFTER_PAINT", bare_gtk_frame_clock_event_after_paint)
 
   V("SETTINGS_EVENT_PREFER_DARK_THEME", bare_gtk_settings_event_prefer_dark_theme)
   V("SETTINGS_EVENT_XFT_DPI", bare_gtk_settings_event_xft_dpi)

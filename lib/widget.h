@@ -135,6 +135,27 @@ bare_gtk_widget_cursor(js_env_t *env, js_callback_info_t *info) {
   return NULL;
 }
 
+// Only a widget that has been realized has one.
+static js_value_t *
+bare_gtk_widget_frame_clock(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 1;
+  js_value_t *argv[1];
+
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, &argc, argv, NULL, (void **) &state);
+  assert(err == 0);
+
+  assert(argc == 1);
+
+  GtkWidget *widget;
+  err = bare_gobject_read_tag(env, state->registry, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  return bare_gtk__create_tag(env, state, gtk_widget_get_frame_clock(widget));
+}
+
 static js_value_t *
 bare_gtk_widget_set_cursor_from_name(js_env_t *env, js_callback_info_t *info) {
   int err;
