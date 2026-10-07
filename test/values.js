@@ -3,6 +3,7 @@ const { CssProvider, Display, Label, StyleContext, Texture, constants } = requir
 const Cursor = require('../lib/cursor')
 const Settings = require('../lib/settings')
 const text = require('../lib/text')
+const { frame, mount } = require('./helpers')
 
 test('creates a cursor by name', (t) => {
   const fallback = Cursor.newFromName('default')
@@ -17,7 +18,7 @@ test('fails to read a missing image', (t) => {
   t.throws(() => Texture.newFromFilename('/no/such/file.png'))
 })
 
-test('applies a style sheet to the display', (t) => {
+test('applies a style sheet to the display', async (t) => {
   const display = Display.getDefault()
   const provider = new CssProvider()
   const label = new Label()
@@ -27,11 +28,16 @@ test('applies a style sheet to the display', (t) => {
   label.text = 'A'
   label.addCssClass('wide')
 
+  await mount(t, label)
+
   const [, before] = label.measure(constants.ORIENTATION_HORIZONTAL)
 
   StyleContext.addProviderForDisplay(display, provider, constants.STYLE_PROVIDER_PRIORITY_USER)
 
   t.teardown(() => StyleContext.removeProviderForDisplay(display, provider))
+
+  // A new style sheet is applied on the next frame.
+  await frame()
 
   const [, after] = label.measure(constants.ORIENTATION_HORIZONTAL)
 

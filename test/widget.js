@@ -54,12 +54,14 @@ test('sets the common properties', (t) => {
   widget.visible = false
   widget.sensitive = false
   widget.canTarget = false
-  widget.opacity = 0.5
+
+  // GTK keeps opacity in eight bits, so this is a value it can hold exactly.
+  widget.opacity = 0.2
 
   t.equal(widget.visible, false, 'hidden')
   t.equal(widget.sensitive, false, 'insensitive')
   t.equal(widget.canTarget, false, 'untargetable')
-  t.equal(widget.opacity, 0.5, 'translucent')
+  t.equal(widget.opacity, 0.2, 'translucent')
 })
 
 test('sets the overflow', (t) => {

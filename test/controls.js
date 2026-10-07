@@ -1,7 +1,6 @@
 const { test } = require('bare-tap')
-const { afterAnimationFrame } = require('bare-animation-frame')
 const { Entry, Fixed, Label, Spinner, Switch, TextView, constants } = require('..')
-const { mount } = require('./helpers')
+const { frame, mount } = require('./helpers')
 
 test('sets the text of a label', (t) => {
   const label = new Label()
@@ -148,11 +147,11 @@ test('reports focus moving between entries', async (t) => {
 
   t.equal(a.grabFocus(), true, 'took the focus')
 
-  await afterAnimationFrame()
+  await frame()
 
   b.grabFocus()
 
-  await afterAnimationFrame()
+  await frame()
 
   window.setRootFocus(null)
 

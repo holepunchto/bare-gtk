@@ -1,7 +1,6 @@
 const { test } = require('bare-tap')
-const { afterAnimationFrame } = require('bare-animation-frame')
 const { FrameFixed, FrameLayout, Label } = require('..')
-const { mount } = require('./helpers')
+const { frame, mount } = require('./helpers')
 
 test('keeps the layout manager wrapper', (t) => {
   const fixed = new FrameFixed()
@@ -82,7 +81,7 @@ test('moves a child with a transform', async (t) => {
     5, 15, 0, 1
   ]
 
-  await afterAnimationFrame()
+  await frame()
 
   t.deepStrictEqual(child.computeBounds(fixed), [15, 25, 20, 20])
 })

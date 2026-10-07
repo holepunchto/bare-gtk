@@ -192,11 +192,16 @@ bare_gtk_entry_placeholder_text(js_env_t *env, js_callback_info_t *info) {
   if (argc == 1) {
     const char *text = gtk_entry_get_placeholder_text(entry);
 
-    err = js_create_string_utf8(env, (const utf8_t *) (text == NULL ? "" : text), (size_t) -1, &result);
-    assert(err == 0);
+    if (text) {
+      err = js_create_string_utf8(env, (const utf8_t *) text, (size_t) -1, &result);
+      assert(err == 0);
+    } else {
+      err = js_get_null(env, &result);
+      assert(err == 0);
+    }
   } else {
     char *text;
-    err = bare_gtk__read_string(env, argv[1], "text", &text);
+    err = bare_gtk__read_string_or_null(env, argv[1], "text", &text);
     if (err < 0) return NULL;
 
     gtk_entry_set_placeholder_text(entry, text);

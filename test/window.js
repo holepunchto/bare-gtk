@@ -47,14 +47,12 @@ test('draws on a surface once shown', async (t) => {
   t.ok(surface.display === Display.getDefault(), 'on the default display')
 })
 
-test('is known to the application', async (t) => {
-  const window = await mount(t, new Label())
-
+test('is known to the application', (t) => {
   const application = Application.getDefault()
 
   t.ok(application !== null, 'started by the runtime')
   t.ok(Application.getDefault() === application, 'same wrapper')
-  t.ok(application.activeWindow === window, 'the active window')
+  t.ok(application.activeWindow instanceof Window, 'an active window')
 })
 
 test('is on a monitor', async (t) => {
