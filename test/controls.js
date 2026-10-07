@@ -1,5 +1,14 @@
 const { test } = require('bare-tap')
-const { Entry, Fixed, Label, Spinner, Switch, TextView, constants } = require('..')
+const {
+  Entry,
+  EventControllerFocus,
+  Fixed,
+  Label,
+  Spinner,
+  Switch,
+  TextView,
+  constants
+} = require('..')
 const { frame, mount } = require('./helpers')
 
 test('sets the text of a label', (t) => {
@@ -128,7 +137,8 @@ test('sets the hints of an entry', (t) => {
 
   entry.placeholderText = null
 
-  t.equal(entry.placeholderText, null, 'placeholder cleared')
+  // GTK keeps an empty placeholder once one has been set.
+  t.equal(entry.placeholderText, '', 'placeholder cleared')
 })
 
 test('reports focus moving between entries', async (t) => {
@@ -139,11 +149,16 @@ test('reports focus moving between entries', async (t) => {
   a.insertBefore(parent)
   b.insertBefore(parent)
 
-  const window = await mount(t, parent)
+  await mount(t, parent)
 
   const events = []
 
-  a.on('is-focus', (focused) => events.push(focused))
+  // An entry hands the focus to the text inside it, so it is never the focus
+  // widget itself.
+  const focus = a.addController(new EventControllerFocus())
+
+  focus.on('enter', () => events.push('enter'))
+  focus.on('leave', () => events.push('leave'))
 
   t.equal(a.grabFocus(), true, 'took the focus')
 
@@ -153,9 +168,7 @@ test('reports focus moving between entries', async (t) => {
 
   await frame()
 
-  window.setRootFocus(null)
-
-  t.deepStrictEqual(events, [1, 0])
+  t.deepStrictEqual(events, ['enter', 'leave'])
 })
 
 test('emits when a switch is toggled', (t) => {
