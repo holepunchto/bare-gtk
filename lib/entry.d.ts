@@ -1,6 +1,9 @@
 import GTKWidget = require('./widget')
 
-/** A single line of editable text, as a `GtkEntry`. */
+/**
+ * A single line of editable text, as a `GtkEntry`. The focus goes to the text inside the entry
+ * rather than the entry itself, so follow it with a `GTKEventControllerFocus`.
+ */
 interface GTKEntry extends GTKWidget<GTKEntry.Events> {
   text: string
 
@@ -78,15 +81,6 @@ declare namespace GTKEntry {
 
     /** The text from `start` to `end` is about to be deleted. `text` is empty. */
     'delete-text': [text: string, start: number, end: number]
-
-    /** The entry got or lost the keyboard. `focused` is 1 or 0. */
-    'has-focus': [focused: number]
-
-    /**
-     * The entry became or stopped being the focus widget of its window. `focused` is 1 or 0.
-     * A window that is not active still has a focus widget.
-     */
-    'is-focus': [focused: number]
   }
 }
 

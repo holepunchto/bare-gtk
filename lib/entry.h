@@ -15,8 +15,6 @@ enum {
   bare_gtk_entry_event_cursor_position = 1 << 2,
   bare_gtk_entry_event_insert_text = 1 << 3,
   bare_gtk_entry_event_delete_text = 1 << 4,
-  bare_gtk_entry_event_has_focus = 1 << 5,
-  bare_gtk_entry_event_is_focus = 1 << 6,
 };
 
 typedef struct {
@@ -31,8 +29,6 @@ typedef struct {
   gulong on_cursor_position;
   gulong on_insert_text;
   gulong on_delete_text;
-  gulong on_has_focus;
-  gulong on_is_focus;
 } BareEntry;
 
 typedef struct {
@@ -71,22 +67,6 @@ bare_gtk_entry__on_cursor_position(GObject *object, GParamSpec *spec, gpointer d
   BareEntry *self = (BareEntry *) object;
 
   bare_gtk__emit(self->state, object, "cursor-position", 0, NULL);
-}
-
-static void
-bare_gtk_entry__on_has_focus(GObject *object, GParamSpec *spec, gpointer data) {
-  BareEntry *self = (BareEntry *) object;
-
-  bare_gtk__emit(self->state, object, "has-focus", 1, (const double[]) {gtk_widget_has_focus(GTK_WIDGET(object)) ? 1 : 0});
-}
-
-// Whether this is the focus widget of its window. That is not the same as
-// having the keyboard: a window that is not active still has a focus widget.
-static void
-bare_gtk_entry__on_is_focus(GObject *object, GParamSpec *spec, gpointer data) {
-  BareEntry *self = (BareEntry *) object;
-
-  bare_gtk__emit(self->state, object, "is-focus", 1, (const double[]) {gtk_widget_is_focus(GTK_WIDGET(object)) ? 1 : 0});
 }
 
 // GTK reports an insertion and a deletion separately, where other toolkits
@@ -163,8 +143,6 @@ bare_gtk_entry_event_mask(js_env_t *env, js_callback_info_t *info) {
   V(bare_gtk_entry_event_cursor_position, on_cursor_position, "notify::cursor-position", bare_gtk_entry__on_cursor_position)
   V(bare_gtk_entry_event_insert_text, on_insert_text, "insert-text", bare_gtk_entry__on_insert_text)
   V(bare_gtk_entry_event_delete_text, on_delete_text, "delete-text", bare_gtk_entry__on_delete_text)
-  V(bare_gtk_entry_event_has_focus, on_has_focus, "notify::has-focus", bare_gtk_entry__on_has_focus)
-  V(bare_gtk_entry_event_is_focus, on_is_focus, "notify::is-focus", bare_gtk_entry__on_is_focus)
 #undef V
 
   return NULL;
