@@ -149,16 +149,17 @@ test('reports focus moving between entries', async (t) => {
   a.insertBefore(parent)
   b.insertBefore(parent)
 
-  await mount(t, parent)
-
   const events = []
 
   // An entry hands the focus to the text inside it, so it is never the focus
-  // widget itself.
+  // widget itself. The controller is added before the entries are shown, as a
+  // window that lost its focus widget gives the focus to the first one.
   const focus = a.addController(new EventControllerFocus())
 
   focus.on('enter', () => events.push('enter'))
   focus.on('leave', () => events.push('leave'))
+
+  await mount(t, parent)
 
   t.equal(a.grabFocus(), true, 'took the focus')
 
