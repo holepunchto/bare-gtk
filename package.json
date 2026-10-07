@@ -28,7 +28,7 @@
   "scripts": {
     "format": "prettier --write . && lunte --fix",
     "lint": "prettier --check . && lunte",
-    "test": "brittle-bare --coverage test.js"
+    "test": "bare-native-test --runtime bare-gtk/runtime test.js"
   },
   "repository": {
     "type": "git",
@@ -48,7 +48,10 @@
     "bare-build": "^1.0.0"
   },
   "devDependencies": {
-    "brittle": "^3.18.0",
+    "bare-animation-frame": "^0.1.0",
+    "bare-gtk": "file:.",
+    "bare-native-test": "^0.1.0",
+    "bare-tap": "^1.1.0",
     "cmake-bare": "^1.6.5",
     "cmake-fetch": "^1.4.0",
     "lunte": "^1.8.0",
