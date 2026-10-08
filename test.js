@@ -1,0 +1,7 @@
+require('./test/widget')
+require('./test/window')
+require('./test/layout')
+require('./test/scrolled-window')
+require('./test/controls')
+require('./test/controllers')
+require('./test/values')

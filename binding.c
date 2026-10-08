@@ -391,8 +391,6 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("ENTRY_EVENT_CURSOR_POSITION", bare_gtk_entry_event_cursor_position)
   V("ENTRY_EVENT_INSERT_TEXT", bare_gtk_entry_event_insert_text)
   V("ENTRY_EVENT_DELETE_TEXT", bare_gtk_entry_event_delete_text)
-  V("ENTRY_EVENT_HAS_FOCUS", bare_gtk_entry_event_has_focus)
-  V("ENTRY_EVENT_IS_FOCUS", bare_gtk_entry_event_is_focus)
 
   V("TEXT_VIEW_EVENT_HAS_FOCUS", bare_gtk_text_view_event_has_focus)
   V("TEXT_VIEW_EVENT_IS_FOCUS", bare_gtk_text_view_event_is_focus)

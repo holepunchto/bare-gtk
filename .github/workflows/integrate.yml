@@ -31,7 +31,9 @@ jobs:
     name: Test / ${{ matrix.platform }}-${{ matrix.arch }}
     steps:
       - uses: holepunchto/actions/bare-base@v1
-      - run: sudo apt update && sudo apt install -y libgtk-4-dev
+      - uses: holepunchto/actions/setup-gtk@v1
+        with:
+          dev: true
       - uses: holepunchto/actions/compile-prebuilds@v1
         with:
           platform: ${{ matrix.platform }}
