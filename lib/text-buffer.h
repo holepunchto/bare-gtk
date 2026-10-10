@@ -52,14 +52,14 @@ bare_gtk_text_buffer__on_changed(GtkTextBuffer *buffer, gpointer data) {
 
 static void
 bare_gtk_text_buffer__on_cursor_position(GObject *object, GParamSpec *spec, gpointer data) {
-  bare_gtk__emit(data, object, "cursor-position", 0, NULL);
+  bare_gtk__emit(data, object, "cursorPosition", 0, NULL);
 }
 
 static void
 bare_gtk_text_buffer__on_insert_text(GtkTextBuffer *buffer, GtkTextIter *position, const char *text, int length, gpointer data) {
   int offset = gtk_text_iter_get_offset(position);
 
-  bare_gtk__emit_replacement(data, buffer, "insert-text", text, offset, offset);
+  bare_gtk__emit_replacement(data, buffer, "insertText", text, offset, offset);
 }
 
 static void
@@ -67,7 +67,7 @@ bare_gtk_text_buffer__on_delete_range(GtkTextBuffer *buffer, GtkTextIter *start,
   bare_gtk__emit_replacement(
     data,
     buffer,
-    "delete-range",
+    "deleteRange",
     "",
     gtk_text_iter_get_offset(start),
     gtk_text_iter_get_offset(end)

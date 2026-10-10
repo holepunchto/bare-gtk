@@ -14,7 +14,7 @@ declare class GTKAdjustment {
 
 declare namespace GTKAdjustment {
   export interface Events {
-    'value-changed': [value: number]
+    valueChanged: [value: number]
   }
 }
 

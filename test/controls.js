@@ -65,15 +65,15 @@ test('emits when the text of an entry changes', (t) => {
   const events = []
 
   entry.on('changed', () => events.push('changed'))
-  entry.on('insert-text', (text, start) => events.push(['insert-text', text, start]))
+  entry.on('insertText', (text, start) => events.push(['insertText', text, start]))
 
   entry.text = 'Hello'
 
   t.equal(entry.text, 'Hello', 'text')
   t.ok(events.includes('changed'), 'changed')
   t.deepStrictEqual(
-    events.find((event) => event[0] === 'insert-text'),
-    ['insert-text', 'Hello', 0],
+    events.find((event) => event[0] === 'insertText'),
+    ['insertText', 'Hello', 0],
     'inserted'
   )
 })

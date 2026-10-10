@@ -66,7 +66,7 @@ static void
 bare_gtk_entry__on_cursor_position(GObject *object, GParamSpec *spec, gpointer data) {
   BareEntry *self = (BareEntry *) object;
 
-  bare_gtk__emit(self->state, object, "cursor-position", 0, NULL);
+  bare_gtk__emit(self->state, object, "cursorPosition", 0, NULL);
 }
 
 // GTK reports an insertion and a deletion separately, where other toolkits
@@ -75,14 +75,14 @@ static void
 bare_gtk_entry__on_insert_text(GtkEditable *editable, const char *text, int length, int *position, gpointer data) {
   BareEntry *self = (BareEntry *) editable;
 
-  bare_gtk__emit_replacement(self->state, editable, "insert-text", text, *position, *position);
+  bare_gtk__emit_replacement(self->state, editable, "insertText", text, *position, *position);
 }
 
 static void
 bare_gtk_entry__on_delete_text(GtkEditable *editable, int start, int end, gpointer data) {
   BareEntry *self = (BareEntry *) editable;
 
-  bare_gtk__emit_replacement(self->state, editable, "delete-text", "", start, end);
+  bare_gtk__emit_replacement(self->state, editable, "deleteText", "", start, end);
 }
 
 static js_value_t *

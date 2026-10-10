@@ -24,7 +24,10 @@ declare class GTKWindow {
 declare namespace GTKWindow {
   export interface Events {
     /** The user asked to close the window. */
-    'close-request': []
+    closeRequest: []
+
+    /** `scaleFactor` changed, for example because the window moved to another monitor. */
+    scaleFactor: []
   }
 }
 

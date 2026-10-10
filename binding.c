@@ -401,6 +401,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("TEXT_BUFFER_EVENT_DELETE_RANGE", bare_gtk_text_buffer_event_delete_range)
 
   V("WINDOW_EVENT_CLOSE_REQUEST", bare_gtk_window_event_close_request)
+  V("WINDOW_EVENT_SCALE_FACTOR", bare_gtk_window_event_scale_factor)
 #undef V
 
   return exports;

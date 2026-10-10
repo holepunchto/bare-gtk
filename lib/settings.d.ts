@@ -17,8 +17,8 @@ declare class GTKSettings {
 
 declare namespace GTKSettings {
   export interface Events {
-    'prefer-dark-theme': []
-    'xft-dpi': []
+    preferDarkTheme: []
+    xftDpi: []
   }
 }
 

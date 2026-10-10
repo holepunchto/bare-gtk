@@ -13,6 +13,7 @@ extern GtkApplication *bare_gtk_app __attribute__((weak));
 
 enum {
   bare_gtk_window_event_close_request = 1 << 0,
+  bare_gtk_window_event_scale_factor = 1 << 1,
 };
 
 typedef struct {
@@ -22,6 +23,7 @@ typedef struct {
 
   uint32_t events;
   gulong on_close_request;
+  gulong on_scale_factor;
 } BareWindow;
 
 typedef struct {
@@ -45,9 +47,16 @@ static gboolean
 bare_gtk_window__on_close_request(GtkWindow *window, gpointer data) {
   BareWindow *self = (BareWindow *) window;
 
-  bare_gtk__emit(self->state, window, "close-request", 0, NULL);
+  bare_gtk__emit(self->state, window, "closeRequest", 0, NULL);
 
   return GDK_EVENT_PROPAGATE;
+}
+
+static void
+bare_gtk_window__on_scale_factor(GObject *object, GParamSpec *spec, gpointer data) {
+  BareWindow *self = (BareWindow *) object;
+
+  bare_gtk__emit(self->state, object, "scaleFactor", 0, NULL);
 }
 
 static js_value_t *
@@ -242,6 +251,16 @@ bare_gtk_window_event_mask(js_env_t *env, js_callback_info_t *info) {
       g_signal_handler_disconnect(window, window->on_close_request);
 
       window->on_close_request = 0;
+    }
+  }
+
+  if (changed & bare_gtk_window_event_scale_factor) {
+    if (events & bare_gtk_window_event_scale_factor) {
+      window->on_scale_factor = g_signal_connect(window, "notify::scale-factor", G_CALLBACK(bare_gtk_window__on_scale_factor), state);
+    } else {
+      g_signal_handler_disconnect(window, window->on_scale_factor);
+
+      window->on_scale_factor = 0;
     }
   }
 
