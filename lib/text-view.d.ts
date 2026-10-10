@@ -29,10 +29,10 @@ declare class GTKTextView {
 declare namespace GTKTextView {
   export interface Events {
     /** The view got or lost the keyboard. `focused` is 1 or 0. */
-    'has-focus': [focused: number]
+    hasFocus: [focused: number]
 
     /** The view became or stopped being the focus widget of its window. `focused` is 1 or 0. */
-    'is-focus': [focused: number]
+    isFocus: [focused: number]
   }
 }
 

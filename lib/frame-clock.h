@@ -28,7 +28,7 @@ bare_gtk_frame_clock__on_after_paint(GdkFrameClock *clock, gpointer data) {
 
   if ((bare_gtk__observed(state, clock) & bare_gtk_frame_clock_event_after_paint) == 0) return;
 
-  bare_gtk__emit(state, clock, "after-paint", 0, NULL);
+  bare_gtk__emit(state, clock, "afterPaint", 0, NULL);
 }
 
 // Connected once and left connected, so the mask alone decides whether anything

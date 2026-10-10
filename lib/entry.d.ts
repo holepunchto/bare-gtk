@@ -74,13 +74,13 @@ declare namespace GTKEntry {
     activate: []
 
     /** The caret moved. */
-    'cursor-position': []
+    cursorPosition: []
 
     /** Text is about to be inserted at `start`. `end` is the same as `start`. */
-    'insert-text': [text: string, start: number, end: number]
+    insertText: [text: string, start: number, end: number]
 
     /** The text from `start` to `end` is about to be deleted. `text` is empty. */
-    'delete-text': [text: string, start: number, end: number]
+    deleteText: [text: string, start: number, end: number]
   }
 }
 

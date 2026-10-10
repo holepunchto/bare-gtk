@@ -45,7 +45,7 @@ test('scrolls by moving an adjustment', async (t) => {
 
   const values = []
 
-  adjustment.on('value-changed', (value) => values.push(value))
+  adjustment.on('valueChanged', (value) => values.push(value))
   adjustment.value = 100
 
   t.equal(adjustment.value, 100, 'scrolled')

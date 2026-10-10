@@ -22,7 +22,7 @@ bare_gtk_gesture_drag__on_drag_begin(GtkGestureDrag *gesture, double start_x, do
 
   if ((bare_gtk__observed(state, gesture) & bare_gtk_gesture_drag_event_drag_begin) == 0) return;
 
-  bare_gtk__emit(state, gesture, "drag-begin", 2, (const double[]) {start_x, start_y});
+  bare_gtk__emit(state, gesture, "dragBegin", 2, (const double[]) {start_x, start_y});
 }
 
 static void
@@ -31,7 +31,7 @@ bare_gtk_gesture_drag__on_drag_update(GtkGestureDrag *gesture, double offset_x, 
 
   if ((bare_gtk__observed(state, gesture) & bare_gtk_gesture_drag_event_drag_update) == 0) return;
 
-  bare_gtk__emit(state, gesture, "drag-update", 2, (const double[]) {offset_x, offset_y});
+  bare_gtk__emit(state, gesture, "dragUpdate", 2, (const double[]) {offset_x, offset_y});
 }
 
 static void
@@ -40,7 +40,7 @@ bare_gtk_gesture_drag__on_drag_end(GtkGestureDrag *gesture, double offset_x, dou
 
   if ((bare_gtk__observed(state, gesture) & bare_gtk_gesture_drag_event_drag_end) == 0) return;
 
-  bare_gtk__emit(state, gesture, "drag-end", 2, (const double[]) {offset_x, offset_y});
+  bare_gtk__emit(state, gesture, "dragEnd", 2, (const double[]) {offset_x, offset_y});
 }
 
 static void

@@ -18,13 +18,13 @@ declare class GTKTextBuffer {
 declare namespace GTKTextBuffer {
   export interface Events {
     changed: []
-    'cursor-position': []
+    cursorPosition: []
 
     /** Text is about to be inserted at `start`. `end` is the same as `start`. */
-    'insert-text': [text: string, start: number, end: number]
+    insertText: [text: string, start: number, end: number]
 
     /** The text from `start` to `end` is about to be deleted. `text` is empty. */
-    'delete-range': [text: string, start: number, end: number]
+    deleteRange: [text: string, start: number, end: number]
   }
 }
 

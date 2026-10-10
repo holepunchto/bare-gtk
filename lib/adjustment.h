@@ -18,7 +18,7 @@ bare_gtk_adjustment__on_value_changed(GtkAdjustment *adjustment, gpointer data) 
 
   if ((bare_gtk__observed(state, adjustment) & bare_gtk_adjustment_event_value_changed) == 0) return;
 
-  bare_gtk__emit(state, adjustment, "value-changed", 1, (const double[]) {gtk_adjustment_get_value(adjustment)});
+  bare_gtk__emit(state, adjustment, "valueChanged", 1, (const double[]) {gtk_adjustment_get_value(adjustment)});
 }
 
 static js_value_t *

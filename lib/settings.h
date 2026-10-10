@@ -19,7 +19,7 @@ bare_gtk_settings__on_prefer_dark_theme(GObject *object, GParamSpec *spec, gpoin
 
   if ((bare_gtk__observed(state, object) & bare_gtk_settings_event_prefer_dark_theme) == 0) return;
 
-  bare_gtk__emit(state, object, "prefer-dark-theme", 0, NULL);
+  bare_gtk__emit(state, object, "preferDarkTheme", 0, NULL);
 }
 
 static void
@@ -28,7 +28,7 @@ bare_gtk_settings__on_xft_dpi(GObject *object, GParamSpec *spec, gpointer data) 
 
   if ((bare_gtk__observed(state, object) & bare_gtk_settings_event_xft_dpi) == 0) return;
 
-  bare_gtk__emit(state, object, "xft-dpi", 0, NULL);
+  bare_gtk__emit(state, object, "xftDpi", 0, NULL);
 }
 
 static js_value_t *

@@ -15,9 +15,9 @@ declare class GTKGestureDrag {
 
 declare namespace GTKGestureDrag {
   export interface Events {
-    'drag-begin': [startX: number, startY: number]
-    'drag-update': [offsetX: number, offsetY: number]
-    'drag-end': [offsetX: number, offsetY: number]
+    dragBegin: [startX: number, startY: number]
+    dragUpdate: [offsetX: number, offsetY: number]
+    dragEnd: [offsetX: number, offsetY: number]
     cancel: []
   }
 }

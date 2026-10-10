@@ -46,7 +46,7 @@ static void
 bare_gtk_text_view__on_has_focus(GObject *object, GParamSpec *spec, gpointer data) {
   BareTextView *self = (BareTextView *) object;
 
-  bare_gtk__emit(self->state, object, "has-focus", 1, (const double[]) {gtk_widget_has_focus(GTK_WIDGET(object)) ? 1 : 0});
+  bare_gtk__emit(self->state, object, "hasFocus", 1, (const double[]) {gtk_widget_has_focus(GTK_WIDGET(object)) ? 1 : 0});
 }
 
 // Whether this is the focus widget of its window, which is not the same as
@@ -55,7 +55,7 @@ static void
 bare_gtk_text_view__on_is_focus(GObject *object, GParamSpec *spec, gpointer data) {
   BareTextView *self = (BareTextView *) object;
 
-  bare_gtk__emit(self->state, object, "is-focus", 1, (const double[]) {gtk_widget_is_focus(GTK_WIDGET(object)) ? 1 : 0});
+  bare_gtk__emit(self->state, object, "isFocus", 1, (const double[]) {gtk_widget_is_focus(GTK_WIDGET(object)) ? 1 : 0});
 }
 
 static js_value_t *
