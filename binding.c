@@ -125,6 +125,7 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("widgetScaleFactor", bare_gtk_widget_scale_factor)
   V("widgetNative", bare_gtk_widget_native)
   V("widgetComputeBounds", bare_gtk_widget_compute_bounds)
+  V("widgetComputePoint", bare_gtk_widget_compute_point)
   V("widgetMeasure", bare_gtk_widget_measure)
   V("widgetAddCssClass", bare_gtk_widget_add_css_class)
   V("widgetRemoveCssClass", bare_gtk_widget_remove_css_class)
@@ -244,11 +245,13 @@ bare_gtk_exports(js_env_t *env, js_value_t *exports) {
   V("monitorValid", bare_gtk_monitor_valid)
 
   V("nativeSurface", bare_gtk_native_surface)
+  V("nativeSurfaceTransform", bare_gtk_native_surface_transform)
 
   V("surfaceWidth", bare_gtk_surface_width)
   V("surfaceHeight", bare_gtk_surface_height)
   V("surfaceScaleFactor", bare_gtk_surface_scale_factor)
   V("surfaceDisplay", bare_gtk_surface_display)
+  V("surfaceXid", bare_gtk_surface_xid)
 
   V("applicationGetDefault", bare_gtk_application_get_default)
   V("applicationActiveWindow", bare_gtk_application_active_window)

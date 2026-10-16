@@ -1,4 +1,5 @@
 const { test } = require('bare-tap')
+const X11 = require('bare-x11')
 const { Label, Window } = require('..')
 const Application = require('../lib/application')
 const Display = require('../lib/display')
@@ -45,6 +46,36 @@ test('draws on a surface once shown', async (t) => {
   t.equal(surface.height, window.height, 'as tall as the window')
   t.ok(surface.scaleFactor >= 1, 'a scale factor')
   t.ok(surface.display === Display.getDefault(), 'on the default display')
+})
+
+test('is drawn within its surface', async (t) => {
+  const window = await mount(t, new Label())
+
+  const [x, y] = window.surfaceTransform
+
+  const { surface } = window
+
+  t.ok(x >= 0 && window.width + x <= surface.width, 'across')
+  t.ok(y >= 0 && window.height + y <= surface.height, 'down')
+})
+
+test('names the X11 window it draws on', async (t) => {
+  const window = await mount(t, new Label())
+
+  const { xid } = window.surface
+
+  // GDK is only on X11 without Wayland, which the runner sees to with Xvfb.
+  if (xid === null) return t.pass('GDK is not on X11')
+
+  const display = X11.Display.open()
+
+  t.teardown(() => display.close())
+
+  const root = display.defaultRootWindow
+
+  t.ok(window.surface.xid === xid, 'the same window each time')
+  t.ok(display.translateCoordinates(xid, root, 0, 0) !== null, 'a window on the server')
+  t.equal(display.queryPointer(xid).root, root, 'on the default screen')
 })
 
 test('is known to the application', (t) => {

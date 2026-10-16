@@ -83,6 +83,9 @@ interface GTKWidget<M extends Record<keyof M, unknown[]> = {}> extends GObject<M
   /** The bounds of the widget in the coordinates of `target`, or `null` if they are unrelated. */
   computeBounds(target: GTKWidget): [x: number, y: number, width: number, height: number] | null
 
+  /** The point `x`, `y` of the widget in the coordinates of `target`, or `null` if they are unrelated. */
+  computePoint(target: GTKWidget, x: number, y: number): [x: number, y: number] | null
+
   /** Add the widget to `parent`, after `previousSibling`, or first when that is `null`. */
   insertAfter(parent: GTKWidget, previousSibling?: GTKWidget | null): this
 

@@ -568,6 +568,64 @@ bare_gtk_widget_compute_bounds(js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
+bare_gtk_widget_compute_point(js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 4;
+  js_value_t *argv[4];
+
+  bare_gtk_state_t *state;
+  err = js_get_callback_info(env, info, &argc, argv, NULL, (void **) &state);
+  assert(err == 0);
+
+  assert(argc == 4);
+
+  GtkWidget *widget;
+  err = bare_gobject_read_tag(env, state->registry, argv[0], "widget", (gpointer *) &widget);
+  if (err < 0) return NULL;
+
+  GtkWidget *target;
+  err = bare_gobject_read_tag(env, state->registry, argv[1], "target", (gpointer *) &target);
+  if (err < 0) return NULL;
+
+  double x;
+  err = js_get_value_double(env, argv[2], &x);
+  assert(err == 0);
+
+  double y;
+  err = js_get_value_double(env, argv[3], &y);
+  assert(err == 0);
+
+  graphene_point_t point;
+
+  js_value_t *result;
+
+  if (!gtk_widget_compute_point(widget, target, &GRAPHENE_POINT_INIT(x, y), &point)) {
+    err = js_get_null(env, &result);
+    assert(err == 0);
+
+    return result;
+  }
+
+  err = js_create_array_with_length(env, 2, &result);
+  assert(err == 0);
+
+#define V(i, d) \
+  { \
+    js_value_t *val; \
+    err = js_create_double(env, d, &val); \
+    assert(err == 0); \
+    err = js_set_element(env, result, i, val); \
+    assert(err == 0); \
+  }
+  V(0, point.x)
+  V(1, point.y)
+#undef V
+
+  return result;
+}
+
+static js_value_t *
 bare_gtk_widget_measure(js_env_t *env, js_callback_info_t *info) {
   int err;
 

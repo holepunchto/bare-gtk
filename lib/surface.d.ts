@@ -10,6 +10,9 @@ interface GDKSurface extends GObject {
   readonly scaleFactor: number
 
   readonly display: GDKDisplay | null
+
+  /** The X11 window of the surface, as `gdk_x11_surface_get_xid()`, or `null` if GDK is not on X11. */
+  readonly xid: number | null
 }
 
 declare class GDKSurface {
