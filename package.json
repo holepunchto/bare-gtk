@@ -52,6 +52,7 @@
     "bare-gtk": "file:.",
     "bare-native-test": "^0.1.0",
     "bare-tap": "^1.1.0",
+    "bare-x11": "^0.1.0",
     "cmake-bare": "^1.6.5",
     "cmake-fetch": "^1.4.0",
     "lunte": "^1.8.0",

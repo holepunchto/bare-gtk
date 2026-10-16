@@ -6,6 +6,12 @@ interface GTKWindow extends GTKWidget<GTKWindow.Events> {
   /** The surface the window draws on, or `null` before it is shown. */
   readonly surface: GDKSurface | null
 
+  /**
+   * Where the window is drawn within its surface, as `gtk_native_get_surface_transform()`. Client
+   * side decorations, such as a shadow, take up the rest.
+   */
+  readonly surfaceTransform: [x: number, y: number]
+
   title: string | null
 
   /** The size the window opens at, as `[width, height]`. */

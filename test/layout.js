@@ -28,6 +28,8 @@ test('places a child at its frame', async (t) => {
   await mount(t, fixed)
 
   t.deepStrictEqual(child.computeBounds(fixed), [10, 20, 30, 40], 'placed')
+  t.deepStrictEqual(child.computePoint(fixed, 5, 6), [15, 26], 'a point within it')
+  t.equal(child.computePoint(new FrameFixed(), 0, 0), null, 'no point in an unrelated widget')
 })
 
 test('emits the size it is laid out at', async (t) => {
@@ -83,5 +85,6 @@ test('moves a child with a transform', async (t) => {
 
   await frame()
 
-  t.deepStrictEqual(child.computeBounds(fixed), [15, 25, 20, 20])
+  t.deepStrictEqual(child.computeBounds(fixed), [15, 25, 20, 20], 'bounds')
+  t.deepStrictEqual(child.computePoint(fixed, 2, 3), [17, 28], 'a point within it')
 })
