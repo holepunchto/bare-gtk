@@ -26,7 +26,6 @@ import LayoutChild = require('./lib/layout-child')
 import LayoutManager = require('./lib/layout-manager')
 import MessageDialog = require('./lib/message-dialog')
 import Monitor = require('./lib/monitor')
-import GObject = require('./lib/object')
 import Paintable = require('./lib/paintable')
 import Picture = require('./lib/picture')
 import Viewport = require('./lib/viewport')
@@ -71,7 +70,6 @@ export {
   LayoutManager,
   MessageDialog,
   Monitor,
-  GObject,
   Paintable,
   Picture,
   Viewport,
