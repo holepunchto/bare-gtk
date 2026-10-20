@@ -1,15 +1,17 @@
 const { test } = require('bare-tap')
+const Pointer = require('bare-pointer')
 const {
   Entry,
   EventControllerFocus,
   Fixed,
+  FrameFixed,
   Label,
   Spinner,
   Switch,
   TextView,
   constants
 } = require('..')
-const { frame, mount } = require('./helpers')
+const { frame, mount, place } = require('./helpers')
 
 test('sets the text of a label', (t) => {
   const label = new Label()
@@ -172,6 +174,31 @@ test('reports focus moving between entries', async (t) => {
   t.deepStrictEqual(events, ['enter', 'leave'])
 })
 
+test('focuses an entry with the pointer', async (t) => {
+  const root = new FrameFixed()
+  const entry = new Entry()
+
+  place(root, entry, [40, 30, 200, 40])
+
+  // An entry hands the focus to the text inside it, so the controller is added
+  // before it is shown.
+  const focus = entry.addController(new EventControllerFocus())
+
+  const events = []
+
+  focus.on('enter', () => events.push('enter'))
+
+  await mount(t, root)
+
+  const pointer = new Pointer()
+
+  t.teardown(() => pointer.destroy())
+
+  await pointer.tap(entry)
+
+  t.deepStrictEqual(events, ['enter'])
+})
+
 test('emits when a switch is toggled', (t) => {
   const toggle = new Switch()
 
@@ -189,6 +216,34 @@ test('emits when a switch is toggled', (t) => {
   toggle.active = true
 
   t.equal(changes, 1, 'not for the same value')
+})
+
+test('toggles a switch with the pointer', async (t) => {
+  const root = new FrameFixed()
+  const toggle = new Switch()
+
+  const [, width] = toggle.measure(constants.ORIENTATION_HORIZONTAL)
+  const [, height] = toggle.measure(constants.ORIENTATION_VERTICAL)
+
+  place(root, toggle, [40, 30, width, height])
+
+  await mount(t, root)
+
+  const pointer = new Pointer()
+
+  t.teardown(() => pointer.destroy())
+
+  let changes = 0
+
+  toggle.on('active', () => changes++)
+
+  await pointer.tap(toggle)
+
+  // A switch only changes once its animation has finished.
+  for (let i = 0; i < 30 && changes === 0; i++) await frame()
+
+  t.equal(changes, 1, 'changed')
+  t.equal(toggle.active, true, 'on')
 })
 
 test('spins a spinner', (t) => {

@@ -1,8 +1,6 @@
 const { test } = require('bare-tap')
 const X11 = require('bare-x11')
-const { Label, Window } = require('..')
-const Application = require('../lib/application')
-const Display = require('../lib/display')
+const { Application, Display, Label, Window } = require('..')
 const { mount } = require('./helpers')
 
 test('sets the title and default size', (t) => {

@@ -39,3 +39,14 @@ exports.frame = function frame() {
 
   return frames.afterAnimationFrame()
 }
+
+exports.place = function place(parent, child, frame) {
+  child.insertBefore(parent)
+
+  parent.layoutManager.getLayoutChild(child).frame = frame
+}
+
+// GTK reports event coordinates as single precision floats.
+exports.round = function round(value) {
+  return Math.round(value * 1000) / 1000
+}

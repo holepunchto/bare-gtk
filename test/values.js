@@ -1,8 +1,15 @@
 const { test } = require('bare-tap')
-const { CssProvider, Display, Label, StyleContext, Texture, constants } = require('..')
-const Cursor = require('../lib/cursor')
-const Settings = require('../lib/settings')
-const text = require('../lib/text')
+const {
+  CssProvider,
+  Cursor,
+  Display,
+  Label,
+  Settings,
+  StyleContext,
+  Texture,
+  constants,
+  text
+} = require('..')
 const { frame, mount } = require('./helpers')
 
 test('creates a cursor by name', (t) => {
