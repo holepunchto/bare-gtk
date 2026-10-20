@@ -14,6 +14,7 @@ extern GtkApplication *bare_gtk_app __attribute__((weak));
 enum {
   bare_gtk_window_event_close_request = 1 << 0,
   bare_gtk_window_event_scale_factor = 1 << 1,
+  bare_gtk_window_event_hide = 1 << 2,
 };
 
 typedef struct {
@@ -24,6 +25,7 @@ typedef struct {
   uint32_t events;
   gulong on_close_request;
   gulong on_scale_factor;
+  gulong on_hide;
 } BareWindow;
 
 typedef struct {
@@ -57,6 +59,13 @@ bare_gtk_window__on_scale_factor(GObject *object, GParamSpec *spec, gpointer dat
   BareWindow *self = (BareWindow *) object;
 
   bare_gtk__emit(self->state, object, "scaleFactor", 0, NULL);
+}
+
+static void
+bare_gtk_window__on_hide(GtkWidget *widget, gpointer data) {
+  BareWindow *self = (BareWindow *) widget;
+
+  bare_gtk__emit(self->state, widget, "hide", 0, NULL);
 }
 
 static js_value_t *
@@ -261,6 +270,16 @@ bare_gtk_window_event_mask(js_env_t *env, js_callback_info_t *info) {
       g_signal_handler_disconnect(window, window->on_scale_factor);
 
       window->on_scale_factor = 0;
+    }
+  }
+
+  if (changed & bare_gtk_window_event_hide) {
+    if (events & bare_gtk_window_event_hide) {
+      window->on_hide = g_signal_connect(window, "hide", G_CALLBACK(bare_gtk_window__on_hide), state);
+    } else {
+      g_signal_handler_disconnect(window, window->on_hide);
+
+      window->on_hide = 0;
     }
   }
 

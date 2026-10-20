@@ -34,6 +34,9 @@ declare namespace GTKWindow {
 
     /** `scaleFactor` changed, for example because the window moved to another monitor. */
     scaleFactor: []
+
+    /** The window was hidden, such as by setting `visible`. */
+    hide: []
   }
 }
 

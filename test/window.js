@@ -33,6 +33,21 @@ test('keeps the child wrapper', (t) => {
   t.equal(label.parent, null, 'removed')
 })
 
+test('emits when hidden', (t) => {
+  const window = new Window()
+
+  let hides = 0
+
+  window.on('hide', () => hides++)
+  window.visible = true
+
+  t.equal(hides, 0, 'not while shown')
+
+  window.visible = false
+
+  t.equal(hides, 1, 'once hidden')
+})
+
 test('draws on a surface once shown', async (t) => {
   const window = await mount(t, new Label())
 
